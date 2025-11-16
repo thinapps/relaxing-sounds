@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.2
+- switched app theme to `Theme.Material3.DayNight.NoActionBar` to fix a launch crash caused by MaterialCardView
+- cleaned up home screen layout by removing hardcoded text and adding proper string resources for all sound card titles and subtitles
+
 ### 0.1.1
 - added three full-width tappable sound cards (Ocean Waves, Rain, Brown Noise)
 - implemented basic on-tap behavior with placeholder toast messages
