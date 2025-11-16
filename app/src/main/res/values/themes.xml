@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.RelaxingSounds" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/rs_color_primary</item>
-        <item name="colorPrimaryDark">@color/rs_color_primary_dark</item>
-        <item name="colorAccent">@color/rs_color_accent</item>
-
+    <style name="Theme.RelaxingSounds" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/rs_color_background</item>
+        <item name="android:textColorPrimary">@color/rs_color_on_background</item>
     </style>
 
 </resources>
