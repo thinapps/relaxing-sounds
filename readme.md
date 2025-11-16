@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.1.1
+- added three full-width tappable sound cards (Ocean Waves, Rain, Brown Noise)
+- implemented basic on-tap behavior with placeholder toast messages
+- updated main screen layout with scrolling, Material cards, and improved text hierarchy
+
 ### 0.1.0
 - initial test release (signed)
 - general project structure with GitHub Actions support
