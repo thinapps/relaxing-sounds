@@ -62,7 +62,7 @@
                         android:id="@+id/text_ocean_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ocean Waves"
+                        android:text="@string/sound_ocean_title"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -72,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Gentle shoreline ambience"
+                        android:text="@string/sound_ocean_subtitle"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="14sp" />
 
@@ -99,7 +99,7 @@
                         android:id="@+id/text_rain_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rain"
+                        android:text="@string/sound_rain_title"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -109,7 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Steady rain on a quiet night"
+                        android:text="@string/sound_rain_subtitle"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="14sp" />
 
@@ -137,7 +137,7 @@
                         android:id="@+id/text_brown_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Brown Noise"
+                        android:text="@string/sound_brown_title"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -147,7 +147,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Deep, warm background noise"
+                        android:text="@string/sound_brown_subtitle"
                         android:textColor="@color/rs_color_on_background"
                         android:textSize="14sp" />
 
