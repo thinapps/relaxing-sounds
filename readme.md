@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.3
+- added a new local MP3 ("Ocean 3: Soft Ocean Waves") sourced from `elevenlabs.io/sound-effects/ocean` and placed in `res/raw/`
+- implemented a simple looping play/pause toggle on the Ocean Waves card
+
 ### 0.1.2
 - switched app theme to `Theme.Material3.DayNight.NoActionBar` to fix a launch crash caused by MaterialCardView
 - cleaned up home screen layout by removing hardcoded text and adding proper string resources for all sound card titles and subtitles
