@@ -2,6 +2,13 @@
 
 ## Changelog
 
+### 0.1.4
+- replaced toast-based behavior by opening a new detail screen for each sound card
+- added `SoundDetailActivity` to handle per-sound playback and future customization
+- moved Ocean Waves playback into the new detail screen (looping audio)
+- Rain and Brown Noise now open placeholder detail screens (audio coming later)
+- updated `AndroidManifest.xml` to register the new activity
+
 ### 0.1.3
 - added a new local MP3 ("Ocean 3: Soft Ocean Waves") sourced from `elevenlabs.io/sound-effects/ocean` and placed in `res/raw/`
 - implemented a simple looping play/pause toggle on the Ocean Waves card
