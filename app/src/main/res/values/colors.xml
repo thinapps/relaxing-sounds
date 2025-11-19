@@ -10,4 +10,14 @@
     <color name="rs_color_background">#121212</color>
     <color name="rs_color_on_background">#FFFFFF</color>
 
+    <!-- sound card gradients -->
+    <color name="rs_color_brown_start">#4E342E</color>
+    <color name="rs_color_brown_end">#BCAAA4</color>
+
+    <color name="rs_color_ocean_start">#1565C0</color>
+    <color name="rs_color_ocean_end">#81D4FA</color>
+
+    <color name="rs_color_rain_start">#283593</color>
+    <color name="rs_color_rain_end">#9FA8DA</color>
+
 </resources>
