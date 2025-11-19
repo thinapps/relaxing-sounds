@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.7
+- added a new local MP3 (“Soft Rain 6”) sourced from `elevenlabs.io/sound-effects/soft-rain` and placed in `res/raw/`
+- updated the Rain detail screen to play the new audio using existing play/pause controls
+
 ### 0.1.6
 - added a top app bar with a back arrow to the sound detail screen
 - wired the toolbar navigation icon to use the system back behavior
