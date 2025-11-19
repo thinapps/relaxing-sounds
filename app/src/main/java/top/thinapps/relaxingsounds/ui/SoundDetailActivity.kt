@@ -29,35 +29,35 @@ class SoundDetailActivity : AppCompatActivity() {
 
         val soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
-        val (titleRes, subtitleRes, hasAudio) = when (soundKey) {
+        val (titleRes, subtitleRes, audioResId) = when (soundKey) {
             SOUND_OCEAN -> Triple(
                 R.string.sound_ocean_title,
                 R.string.sound_ocean_subtitle,
-                true
+                R.raw.ocean_waves
             )
             SOUND_RAIN -> Triple(
                 R.string.sound_rain_title,
                 R.string.sound_rain_subtitle,
-                false
+                R.raw.rain
             )
             SOUND_BROWN -> Triple(
                 R.string.sound_brown_title,
                 R.string.sound_brown_subtitle,
-                false
+                null   // still coming soon
             )
             else -> Triple(
                 R.string.sound_ocean_title,
                 R.string.sound_ocean_subtitle,
-                true
+                R.raw.ocean_waves
             )
         }
 
         titleView.text = getString(titleRes)
 
-        if (hasAudio) {
+        if (audioResId != null) {
             descriptionView.text = getString(subtitleRes)
 
-            mediaPlayer = MediaPlayer.create(this, R.raw.ocean_waves).apply {
+            mediaPlayer = MediaPlayer.create(this, audioResId).apply {
                 isLooping = true
                 start()
             }
@@ -67,6 +67,7 @@ class SoundDetailActivity : AppCompatActivity() {
             playPauseButton.setOnClickListener {
                 togglePlayback(playPauseButton)
             }
+
         } else {
             val baseText = getString(subtitleRes)
             descriptionView.text = "$baseText\n\nAudio coming soon in a future update."
