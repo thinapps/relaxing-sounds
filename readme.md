@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.1.5
+- added a play/pause button to the sound detail screen for the Ocean Waves audio
+- playback now loops and can be toggled without leaving the screen
+- Rain and Brown Noise screens hide the button until their audio is added
+
 ### 0.1.4
 - replaced toast-based behavior by opening a new detail screen for each sound card
 - added `SoundDetailActivity` to handle per-sound playback and future customization
