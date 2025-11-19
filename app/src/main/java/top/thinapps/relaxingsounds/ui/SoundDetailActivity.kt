@@ -2,13 +2,16 @@ package top.thinapps.relaxingsounds.ui
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import top.thinapps.relaxingsounds.R
 
 class SoundDetailActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
+    private var isPlaying: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +19,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
         val titleView = findViewById<TextView>(R.id.soundTitle)
         val descriptionView = findViewById<TextView>(R.id.soundDescription)
+        val playPauseButton = findViewById<MaterialButton>(R.id.buttonPlayPause)
 
         val soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
@@ -46,13 +50,33 @@ class SoundDetailActivity : AppCompatActivity() {
 
         if (hasAudio) {
             descriptionView.text = getString(subtitleRes)
+
             mediaPlayer = MediaPlayer.create(this, R.raw.ocean_waves).apply {
                 isLooping = true
                 start()
             }
+            isPlaying = true
+            playPauseButton.text = getString(R.string.sound_pause_label)
+
+            playPauseButton.setOnClickListener {
+                togglePlayback(playPauseButton)
+            }
         } else {
             val baseText = getString(subtitleRes)
             descriptionView.text = "$baseText\n\nAudio coming soon in a future update."
+            playPauseButton.visibility = View.GONE
+        }
+    }
+
+    private fun togglePlayback(button: MaterialButton) {
+        if (isPlaying) {
+            mediaPlayer?.pause()
+            isPlaying = false
+            button.text = getString(R.string.sound_play_label)
+        } else {
+            mediaPlayer?.start()
+            isPlaying = true
+            button.text = getString(R.string.sound_pause_label)
         }
     }
 
