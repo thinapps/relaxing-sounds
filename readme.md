@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.10
+- added ripple press effects to all sound cards on the main screen
+- improved immersive design by preparing transparent floating toolbar on sound detail screen
+
 ### 0.1.9
 - updated `themes.xml` to enforce a consistent dark theme (no DayNight auto-switching)
 - ensured Material components now use branded primary/accent and dark background colors from theme values
