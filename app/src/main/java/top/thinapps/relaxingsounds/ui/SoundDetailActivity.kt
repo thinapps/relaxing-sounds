@@ -3,6 +3,7 @@ package top.thinapps.relaxingsounds.ui
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
@@ -19,6 +20,7 @@ class SoundDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sound_detail)
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        val backgroundView = findViewById<ImageView>(R.id.soundBackground)
         val titleView = findViewById<TextView>(R.id.soundTitle)
         val descriptionView = findViewById<TextView>(R.id.soundDescription)
         val playPauseButton = findViewById<MaterialButton>(R.id.buttonPlayPause)
@@ -29,29 +31,33 @@ class SoundDetailActivity : AppCompatActivity() {
 
         val soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
-        val (titleRes, subtitleRes, audioResId) = when (soundKey) {
-            SOUND_OCEAN -> Triple(
-                R.string.sound_ocean_title,
-                R.string.sound_ocean_subtitle,
-                R.raw.ocean_waves
-            )
-            SOUND_RAIN -> Triple(
-                R.string.sound_rain_title,
-                R.string.sound_rain_subtitle,
-                R.raw.rain
-            )
-            SOUND_BROWN -> Triple(
-                R.string.sound_brown_title,
-                R.string.sound_brown_subtitle,
-                null   // still coming soon
-            )
-            else -> Triple(
-                R.string.sound_ocean_title,
-                R.string.sound_ocean_subtitle,
-                R.raw.ocean_waves
-            )
+        var titleRes = R.string.sound_ocean_title
+        var subtitleRes = R.string.sound_ocean_subtitle
+        var audioResId: Int? = R.raw.ocean_waves
+        var backgroundResId = R.drawable.bg_sound_ocean
+
+        when (soundKey) {
+            SOUND_OCEAN -> {
+                titleRes = R.string.sound_ocean_title
+                subtitleRes = R.string.sound_ocean_subtitle
+                audioResId = R.raw.ocean_waves
+                backgroundResId = R.drawable.bg_sound_ocean
+            }
+            SOUND_RAIN -> {
+                titleRes = R.string.sound_rain_title
+                subtitleRes = R.string.sound_rain_subtitle
+                audioResId = R.raw.rain
+                backgroundResId = R.drawable.bg_sound_rain
+            }
+            SOUND_BROWN -> {
+                titleRes = R.string.sound_brown_title
+                subtitleRes = R.string.sound_brown_subtitle
+                audioResId = null          // still coming soon
+                backgroundResId = R.drawable.bg_sound_brown
+            }
         }
 
+        backgroundView.setImageResource(backgroundResId)
         titleView.text = getString(titleRes)
 
         if (audioResId != null) {
@@ -67,7 +73,6 @@ class SoundDetailActivity : AppCompatActivity() {
             playPauseButton.setOnClickListener {
                 togglePlayback(playPauseButton)
             }
-
         } else {
             val baseText = getString(subtitleRes)
             descriptionView.text = "$baseText\n\nAudio coming soon in a future update."
