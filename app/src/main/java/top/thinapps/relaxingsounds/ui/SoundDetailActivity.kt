@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import top.thinapps.relaxingsounds.R
 
@@ -17,9 +18,14 @@ class SoundDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sound_detail)
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         val titleView = findViewById<TextView>(R.id.soundTitle)
         val descriptionView = findViewById<TextView>(R.id.soundDescription)
         val playPauseButton = findViewById<MaterialButton>(R.id.buttonPlayPause)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         val soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
