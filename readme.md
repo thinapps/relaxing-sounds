@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.6
+- added a top app bar with a back arrow to the sound detail screen
+- wired the toolbar navigation icon to use the system back behavior
+
 ### 0.1.5
 - added a play/pause button to the sound detail screen for the Ocean Waves audio
 - playback now loops and can be toggled without leaving the screen
