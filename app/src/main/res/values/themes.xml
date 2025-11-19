@@ -11,7 +11,6 @@
 
         <!-- surfaces and background -->
         <item name="android:colorBackground">@color/rs_color_background</item>
-        <item name="colorBackground">@color/rs_color_background</item>
         <item name="colorOnBackground">@color/rs_color_on_background</item>
         <item name="colorSurface">@color/rs_color_background</item>
         <item name="colorOnSurface">@color/rs_color_on_background</item>
