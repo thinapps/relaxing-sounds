@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:foreground="?attr/selectableItemBackground"
+                app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp">
 
@@ -86,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:foreground="?attr/selectableItemBackground"
+                app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp">
 
@@ -124,6 +126,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:foreground="?attr/selectableItemBackground"
+                app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp">
 
