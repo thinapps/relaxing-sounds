@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.1.8
+- added a background `ImageView` to the sound detail screen layout
+- wired background drawables dynamically inside `SoundDetailActivity` based on selected sound
+- gradients and/or images will be added in a future update to complete the visual design
+
 ### 0.1.7
 - added a new local MP3 (“Soft Rain 6”) sourced from `elevenlabs.io/sound-effects/soft-rain` and placed in `res/raw/`
 - updated the Rain detail screen to play the new audio using existing play/pause controls
