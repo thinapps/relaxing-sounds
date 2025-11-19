@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.RelaxingSounds" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- you can add color overrides here later if needed -->
+    <style name="Theme.RelaxingSounds" parent="Theme.Material3.Dark.NoActionBar">
+
+        <!-- core brand colors -->
+        <item name="colorPrimary">@color/rs_color_primary</item>
+        <item name="colorOnPrimary">@color/rs_color_on_background</item>
+        <item name="colorSecondary">@color/rs_color_accent</item>
+        <item name="colorOnSecondary">@color/rs_color_on_background</item>
+
+        <!-- surfaces and background -->
+        <item name="android:colorBackground">@color/rs_color_background</item>
+        <item name="colorBackground">@color/rs_color_background</item>
+        <item name="colorOnBackground">@color/rs_color_on_background</item>
+        <item name="colorSurface">@color/rs_color_background</item>
+        <item name="colorOnSurface">@color/rs_color_on_background</item>
+
+        <!-- optional: system bars -->
+        <item name="android:statusBarColor">@color/rs_color_background</item>
+        <item name="android:navigationBarColor">@color/rs_color_background</item>
+
     </style>
 
 </resources>
