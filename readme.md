@@ -2,6 +2,14 @@
 
 ## Changelog
 
+### 0.1.9
+- updated `themes.xml` to enforce a consistent dark theme (no DayNight auto-switching)
+- ensured Material components now use branded primary/accent and dark background colors from theme values
+- consolidated all app color values into `colors.xml` for consistent styling
+- added gradient color values (`rs_color_*_start` / `end`) for sound cards into `colors.xml`
+- updated gradient drawables (`bg_sound_brown.xml`, `bg_sound_ocean.xml`, `bg_sound_rain.xml`) to reference theme colors instead of hex codes
+- removed all remaining hard-coded color values across the app to avoid inconsistent visuals
+
 ### 0.1.8
 - added a background `ImageView` to the sound detail screen layout
 - wired background drawables dynamically inside `SoundDetailActivity` based on selected sound
