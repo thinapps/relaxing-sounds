@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- app text -->
     <string name="app_name">Relaxing Sounds</string>
     <string name="main_title">Relaxing Sounds</string>
     <string name="main_subtitle">Calm audio for sleep and focus</string>
 
+    <!-- ocean waves -->
     <string name="sound_ocean_title">Ocean Waves</string>
     <string name="sound_ocean_subtitle">Gentle shoreline ambience</string>
 
+    <!-- rain -->
     <string name="sound_rain_title">Rain</string>
     <string name="sound_rain_subtitle">Steady rain on a quiet night</string>
 
+    <!-- brown noise -->
     <string name="sound_brown_title">Brown Noise</string>
     <string name="sound_brown_subtitle">Deep, warm background noise</string>
+
+    <!-- playback controls -->
+    <string name="sound_play_label">Play</string>
+    <string name="sound_pause_label">Pause</string>
 
 </resources>
