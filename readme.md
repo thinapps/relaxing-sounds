@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.1.12
+- replaced small text play/pause button with a large centered play/pause icon for a more immersive UI
+- updated button logic to toggle icons correctly while keeping smooth audio fade behavior
+- restored autoplay on screen load so audio now begins with fade-in automatically
+
 ### 0.1.11
 - changed to smooth press-in/out animation to sound cards before opening detail screen
 - improved relaxation feel by delaying detail screen until animation completes
