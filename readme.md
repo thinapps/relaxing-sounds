@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 0.1.11
+- changed to smooth press-in/out animation to sound cards before opening detail screen
+- improved relaxation feel by delaying detail screen until animation completes
+- added gentle audio fade-in on play and fade-out on pause/stop in detail screen
+- ensured fade-out also triggers when leaving the screen
+
 ### 0.1.10
 - added ripple press effects to all sound cards on the main screen
 - improved immersive design by preparing transparent floating toolbar on sound detail screen
