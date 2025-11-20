@@ -41,6 +41,9 @@ class SoundDetailActivity : AppCompatActivity() {
 
         setupUiForSound(soundKey)
 
+        // auto start playback with fade-in
+        fadeInAndStart()
+
         toolbar.setNavigationOnClickListener {
             finish()
         }
