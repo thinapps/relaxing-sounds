@@ -7,11 +7,11 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.button.MaterialButton
 import top.thinapps.relaxingsounds.R
 
 class SoundDetailActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ class SoundDetailActivity : AppCompatActivity() {
     private lateinit var toolbar: MaterialToolbar
     private lateinit var soundTitle: TextView
     private lateinit var soundDescription: TextView
-    private lateinit var buttonPlayPause: MaterialButton
+    private lateinit var playPauseButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ class SoundDetailActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         soundTitle = findViewById(R.id.soundTitle)
         soundDescription = findViewById(R.id.soundDescription)
-        buttonPlayPause = findViewById(R.id.buttonPlayPause)
+        playPauseButton = findViewById(R.id.playPauseButton)
 
         soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
@@ -48,7 +48,7 @@ class SoundDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        buttonPlayPause.setOnClickListener {
+        playPauseButton.setOnClickListener {
             if (isPlaying) {
                 fadeOutAndPause()
             } else {
@@ -69,7 +69,7 @@ class SoundDetailActivity : AppCompatActivity() {
                 R.string.sound_rain_subtitle,
                 R.drawable.bg_sound_rain
             )
-            // placeholder: until you add a real brown noise file, reuse rain background/text if wanted
+            // placeholder: until you add a real brown noise file, reuse brown background
             SOUND_BROWN -> Triple(
                 R.string.sound_brown_title,
                 R.string.sound_brown_subtitle,
@@ -86,9 +86,10 @@ class SoundDetailActivity : AppCompatActivity() {
         soundDescription.setText(descriptionRes)
         root.background = ContextCompat.getDrawable(this, backgroundRes)
 
-        // initial state: not playing
+        // initial ui state: assume not playing yet
         isPlaying = false
-        buttonPlayPause.setText(R.string.sound_play_label)
+        playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+        playPauseButton.contentDescription = getString(R.string.sound_play_label)
     }
 
     private fun ensureMediaPlayer() {
@@ -97,7 +98,7 @@ class SoundDetailActivity : AppCompatActivity() {
         val resId = when (soundKey) {
             SOUND_OCEAN -> R.raw.ocean_waves
             SOUND_RAIN -> R.raw.rain
-            // until you have a dedicated brown noise file, you can point this somewhere else
+            // until you have a dedicated brown noise file, point this somewhere appropriate
             SOUND_BROWN -> R.raw.rain
             else -> R.raw.ocean_waves
         }
@@ -110,7 +111,8 @@ class SoundDetailActivity : AppCompatActivity() {
 
     private fun fadeInAndStart() {
         isPlaying = true
-        buttonPlayPause.setText(R.string.sound_pause_label)
+        playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
+        playPauseButton.contentDescription = getString(R.string.sound_pause_label)
 
         ensureMediaPlayer()
         val player = mediaPlayer ?: return
@@ -136,7 +138,8 @@ class SoundDetailActivity : AppCompatActivity() {
 
     private fun fadeOutAndPause() {
         isPlaying = false
-        buttonPlayPause.setText(R.string.sound_play_label)
+        playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+        playPauseButton.contentDescription = getString(R.string.sound_play_label)
 
         val player = mediaPlayer ?: return
 
