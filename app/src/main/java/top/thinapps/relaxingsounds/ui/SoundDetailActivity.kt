@@ -44,6 +44,13 @@ class SoundDetailActivity : AppCompatActivity() {
         // auto start playback with fade-in
         fadeInAndStart()
 
+        // immersive toolbar + force white nav arrow
+        toolbar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        toolbar.elevation = 0f
+        toolbar.setNavigationIconTint(
+            ContextCompat.getColor(this, android.R.color.white)
+        )
+
         toolbar.setNavigationOnClickListener {
             finish()
         }
@@ -69,7 +76,6 @@ class SoundDetailActivity : AppCompatActivity() {
                 R.string.sound_rain_subtitle,
                 R.drawable.bg_sound_rain
             )
-            // placeholder: until you add a real brown noise file, reuse brown background
             SOUND_BROWN -> Triple(
                 R.string.sound_brown_title,
                 R.string.sound_brown_subtitle,
@@ -86,7 +92,6 @@ class SoundDetailActivity : AppCompatActivity() {
         soundDescription.setText(descriptionRes)
         root.background = ContextCompat.getDrawable(this, backgroundRes)
 
-        // initial ui state: assume not playing yet
         isPlaying = false
         playPauseButton.setImageResource(R.drawable.ic_play)
         playPauseButton.contentDescription = getString(R.string.sound_play_label)
@@ -98,7 +103,6 @@ class SoundDetailActivity : AppCompatActivity() {
         val resId = when (soundKey) {
             SOUND_OCEAN -> R.raw.ocean_waves
             SOUND_RAIN -> R.raw.rain
-            // until you have a dedicated brown noise file, point this somewhere appropriate
             SOUND_BROWN -> R.raw.rain
             else -> R.raw.ocean_waves
         }
@@ -119,7 +123,6 @@ class SoundDetailActivity : AppCompatActivity() {
 
         fadeAnimator?.cancel()
 
-        // start from silent
         player.setVolume(0f, 0f)
         if (!player.isPlaying) {
             player.start()
@@ -168,7 +171,6 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // if user leaves screen, fade out gracefully
         if (isPlaying) {
             fadeOutAndPause()
         }
