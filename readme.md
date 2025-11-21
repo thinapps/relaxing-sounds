@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.15
+- added full-screen illustrated background image (`bg_home_01.png`) for the main activity, using `drawable-nodpi` so it stays crisp across devices
+- wired a subtle top gradient overlay (`bg_toolbar_gradient.xml`) on the home screen to improve text/icon readability against the background artwork
+
 ### 0.1.14
 - increased sound title and subtitle text sizes, centered them, and moved them further down on the sound detail screen
 - kept the immersive toolbar but forced the navigation (back) icon tint to white so it stays readable
