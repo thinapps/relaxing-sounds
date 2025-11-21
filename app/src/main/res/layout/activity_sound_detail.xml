@@ -56,11 +56,13 @@
 
     <ImageButton
         android:id="@+id/playPauseButton"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_media_pause"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_play_button"
+        android:src="@drawable/ic_pause"
+        android:scaleType="centerInside"
         android:tint="@color/rs_color_on_background"
+        android:contentDescription="@string/sound_pause_label"
         app:layout_constraintTop_toBottomOf="@id/soundDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
