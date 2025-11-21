@@ -5,6 +5,8 @@
 ### 0.1.16
 - fixed semi-transparent title and subtitle on the home screen by repositioning the gradient overlay behind UI elements to ensure full-opacity text
 - kept the subtle top gradient (`bg_toolbar_gradient.xml`) to maintain readability against varying background areas without shifting layout content
+- reduced click animation duration on sound cards for a faster, more responsive feel
+- slightly adjusted scale effect to improve touch feedback without noticeable delay
 
 ### 0.1.15
 - added full-screen illustrated background image (`bg_home_01.png`) for the main activity, using `drawable-nodpi` so it stays crisp across devices
