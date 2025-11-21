@@ -162,4 +162,13 @@
 
     </ScrollView>
 
+    <View
+        android:id="@+id/top_gradient"
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:background="@drawable/bg_toolbar_gradient"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
