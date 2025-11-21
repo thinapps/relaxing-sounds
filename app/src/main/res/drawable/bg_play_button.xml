@@ -1,17 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <solid android:color="#33FFFFFF" />
+    <solid android:color="@color/rs_color_play_button_fill" />
 
     <size
         android:width="120dp"
         android:height="120dp" />
 
-    <padding android:all="12dp"/>
-
-    <corners android:radius="60dp"/>
+    <padding android:all="12dp" />
 
     <stroke
         android:width="2dp"
-        android:color="#55FFFFFF" />
+        android:color="@color/rs_color_play_button_stroke" />
 </shape>
