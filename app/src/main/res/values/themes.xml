@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- global card style override using Material 3 -->
+    <!-- global card style override using material 3 -->
     <style name="Widget.RelaxingSounds.CardView" parent="Widget.Material3.CardView.Elevated">
         <item name="strokeWidth">0dp</item>
     </style>
 
     <style name="Theme.RelaxingSounds" parent="Theme.Material3.Dark.NoActionBar">
 
-        <!-- core brand colors -->
+        <!-- core material 3 color roles -->
         <item name="colorPrimary">@color/rs_color_primary</item>
-        <item name="colorOnPrimary">@color/rs_color_on_background</item>
-        <item name="colorSecondary">@color/rs_color_accent</item>
-        <item name="colorOnSecondary">@color/rs_color_on_background</item>
+        <item name="colorOnPrimary">@color/rs_color_on_primary</item>
+        <item name="colorPrimaryContainer">@color/rs_color_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/rs_color_on_primary_container</item>
 
-        <!-- surfaces and background -->
+        <item name="colorSecondary">@color/rs_color_accent</item>
+        <item name="colorOnSecondary">@color/rs_color_on_accent</item>
+        <item name="colorSecondaryContainer">@color/rs_color_accent_container</item>
+        <item name="colorOnSecondaryContainer">@color/rs_color_on_accent_container</item>
+
+        <!-- background and surfaces -->
+        <item name="colorBackground">@color/rs_color_background</item>
         <item name="android:colorBackground">@color/rs_color_background</item>
         <item name="colorOnBackground">@color/rs_color_on_background</item>
-        <item name="colorSurface">@color/rs_color_background</item>
-        <item name="colorOnSurface">@color/rs_color_on_background</item>
 
-        <!-- optional: system bars -->
+        <item name="colorSurface">@color/rs_color_surface</item>
+        <item name="colorOnSurface">@color/rs_color_on_surface</item>
+        <item name="colorSurfaceVariant">@color/rs_color_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/rs_color_on_surface_variant</item>
+
+        <item name="colorOutline">@color/rs_color_outline</item>
+
+        <!-- error colors -->
+        <item name="colorError">@color/rs_color_error</item>
+        <item name="colorOnError">@color/rs_color_on_error</item>
+
+        <!-- system bars (dark content) -->
         <item name="android:statusBarColor">@color/rs_color_background</item>
         <item name="android:navigationBarColor">@color/rs_color_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
-        <!-- apply M3 card style globally -->
+        <!-- default card style for materialcardview -->
         <item name="materialCardViewStyle">@style/Widget.RelaxingSounds.CardView</item>
 
     </style>
