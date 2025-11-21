@@ -88,7 +88,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
         // initial ui state: assume not playing yet
         isPlaying = false
-        playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+        playPauseButton.setImageResource(R.drawable.ic_play)
         playPauseButton.contentDescription = getString(R.string.sound_play_label)
     }
 
@@ -111,7 +111,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
     private fun fadeInAndStart() {
         isPlaying = true
-        playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
+        playPauseButton.setImageResource(R.drawable.ic_pause)
         playPauseButton.contentDescription = getString(R.string.sound_pause_label)
 
         ensureMediaPlayer()
@@ -138,7 +138,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
     private fun fadeOutAndPause() {
         isPlaying = false
-        playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+        playPauseButton.setImageResource(R.drawable.ic_play)
         playPauseButton.contentDescription = getString(R.string.sound_play_label)
 
         val player = mediaPlayer ?: return
