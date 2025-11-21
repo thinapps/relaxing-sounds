@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- global card style override -->
-    <style name="Widget.RelaxingSounds.CardView" parent="Widget.Material3.CardView">
+    <!-- global card style override using Material 3 -->
+    <style name="Widget.RelaxingSounds.CardView" parent="Widget.Material3.CardView.Elevated">
         <item name="strokeWidth">0dp</item>
     </style>
 
@@ -24,7 +24,7 @@
         <item name="android:statusBarColor">@color/rs_color_background</item>
         <item name="android:navigationBarColor">@color/rs_color_background</item>
 
-        <!-- apply card style globally -->
+        <!-- apply M3 card style globally -->
         <item name="materialCardViewStyle">@style/Widget.RelaxingSounds.CardView</item>
 
     </style>
