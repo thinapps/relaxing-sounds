@@ -61,7 +61,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,7 +100,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,7 +140,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_on_background"
                 app:cardUseCompatPadding="true"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
