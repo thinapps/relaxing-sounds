@@ -11,8 +11,8 @@ android {
         applicationId "top.thinapps.relaxingsounds"
         minSdk 24
         targetSdk 35
-        versionCode 13
-        versionName "0.1.12"
+        versionCode 14
+        versionName "0.1.13"
 
         // forces the use of the support library for vector drawables
         vectorDrawables.useSupportLibrary = true
