@@ -44,11 +44,11 @@ class SoundDetailActivity : AppCompatActivity() {
         // auto start playback with fade-in
         fadeInAndStart()
 
-        // immersive toolbar + force white nav arrow
+        // immersive toolbar + themed nav arrow tint
         toolbar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         toolbar.elevation = 0f
         toolbar.setNavigationIconTint(
-            ContextCompat.getColor(this, android.R.color.white)
+            ContextCompat.getColor(this, R.color.rs_color_on_background)
         )
 
         toolbar.setNavigationOnClickListener {
