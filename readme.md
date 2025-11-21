@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.14
+- increased sound title and subtitle text sizes, centered them, and moved them further down on the sound detail screen
+- kept the immersive toolbar but forced the navigation (back) icon tint to white so it stays readable
+
 ### 0.1.13
 - switched from system media icons to custom Material-style play and pause vector icons
 - added circular background with subtle glow for a more polished central play/pause button
