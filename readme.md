@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.16
+- fixed semi-transparent title and subtitle on the home screen by repositioning the gradient overlay behind UI elements to ensure full-opacity text
+- kept the subtle top gradient (`bg_toolbar_gradient.xml`) to maintain readability against varying background areas without shifting layout content
+
 ### 0.1.15
 - added full-screen illustrated background image (`bg_home_01.png`) for the main activity, using `drawable-nodpi` so it stays crisp across devices
 - wired a subtle top gradient overlay (`bg_toolbar_gradient.xml`) on the home screen to improve text/icon readability against the background artwork
