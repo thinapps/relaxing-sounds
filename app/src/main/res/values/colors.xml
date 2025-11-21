@@ -20,4 +20,8 @@
     <color name="rs_color_rain_start">#283593</color>
     <color name="rs_color_rain_end">#9FA8DA</color>
 
+    <!-- play button colors -->
+    <color name="rs_color_play_button_fill">#33FFFFFF</color>
+    <color name="rs_color_play_button_stroke">#55FFFFFF</color>
+
 </resources>
