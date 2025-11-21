@@ -31,18 +31,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun MaterialCardView.setRelaxingClick(soundKey: String) {
         setOnClickListener {
-            // gentle press in
+            // gentle press in (faster)
             this.animate()
-                .scaleX(0.96f)
-                .scaleY(0.96f)
-                .setDuration(160)
+                .scaleX(0.98f)
+                .scaleY(0.98f)
+                .setDuration(90)
                 .setInterpolator(AccelerateDecelerateInterpolator())
                 .withEndAction {
-                    // gentle release, then open screen
+                    // gentle release, then open screen (faster)
                     this.animate()
                         .scaleX(1f)
                         .scaleY(1f)
-                        .setDuration(160)
+                        .setDuration(90)
                         .setInterpolator(AccelerateDecelerateInterpolator())
                         .withEndAction {
                             openSoundDetail(soundKey)
