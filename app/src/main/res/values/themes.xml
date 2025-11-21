@@ -20,7 +20,6 @@
         <item name="colorOnSecondaryContainer">@color/rs_color_on_accent_container</item>
 
         <!-- background and surfaces -->
-        <item name="colorBackground">@color/rs_color_background</item>
         <item name="android:colorBackground">@color/rs_color_background</item>
         <item name="colorOnBackground">@color/rs_color_on_background</item>
 
