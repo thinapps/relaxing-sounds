@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.1.17
+- set `app:strokeWidth="0dp"` on home screen sound cards to eliminate default dark outlines
+- added a global MaterialCardView style in the app theme to keep card strokes disabled everywhere going forward
+
 ### 0.1.16
 - fixed semi-transparent title and subtitle on the home screen by repositioning the gradient overlay behind UI elements to ensure full-opacity text
 - kept the subtle top gradient (`bg_toolbar_gradient.xml`) to maintain readability against varying background areas without shifting layout content
