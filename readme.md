@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 0.1.13
+- switched from system media icons to custom Material-style play and pause vector icons
+- added circular background with subtle glow for a more polished central play/pause button
+- increased button size and enhanced layout for better aesthetics and easier tapping
+- updated icon toggling logic to match new visuals while keeping smooth fade behavior
+
 ### 0.1.12
 - replaced small text play/pause button with a large centered play/pause icon for a more immersive UI
 - updated button logic to toggle icons correctly while keeping smooth audio fade behavior
