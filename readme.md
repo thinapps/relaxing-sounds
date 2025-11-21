@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.2.0
+- migrated the app fully to Material Design 3 with explicit color role assignments in colors.xml and themes.xml to eliminate mixed or default styling
+- standardized dark mode surfaces across the entire UI including status and navigation bars for a more consistent appearance
+- changed to a top-to-bottom toolbar gradient to improve icon and text visibility while keeping a clean minimal look
+
 ### 0.1.17
 - set `app:strokeWidth="0dp"` on home screen sound cards to eliminate default dark outlines
 - added a global MaterialCardView style in the app theme to keep card strokes disabled everywhere going forward
