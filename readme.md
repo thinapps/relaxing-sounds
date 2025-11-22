@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 0.2.2
+- refined home screen spacing and adjusted toolbar gradient height for a cleaner visual hierarchy
+- updated card styling with consistent corner radius and Material3-based elevation behavior
+- unified card ripple behavior with a softer ripple color across the UI
+- made play/pause button sizing responsive to screen width for better appearance on all devices
+
 ### 0.2.1
 - added a unified ripple effect color for cards and wired all home screen cards to use it for a more consistent touch response
 - improved the play/pause button with a subtle tap bounce animation to make playback actions feel more responsive
