@@ -55,29 +55,31 @@ class SoundDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        // subtle bounce on play/pause tap plus fade logic
         playPauseButton.setOnClickListener {
+            // subtle tap bounce
             playPauseButton.animate()
-                .scaleX(0.94f)
-                .scaleY(0.94f)
-                .setDuration(70)
+                .scaleX(0.96f)
+                .scaleY(0.96f)
+                .setDuration(80L)
                 .setInterpolator(AccelerateDecelerateInterpolator())
-                .withEndAction {
-                    playPauseButton.animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(70)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                        .withEndAction {
-                            if (isPlaying) {
-                                fadeOutAndPause()
-                            } else {
-                                fadeInAndStart()
-                            }
-                        }
-                        .start()
-                }
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        playPauseButton.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(120L)
+                            .setInterpolator(AccelerateDecelerateInterpolator())
+                            .setListener(null)
+                            .start()
+                    }
+                })
                 .start()
+
+            if (isPlaying) {
+                fadeOutAndPause()
+            } else {
+                fadeInAndStart()
+            }
         }
     }
 
@@ -88,19 +90,16 @@ class SoundDetailActivity : AppCompatActivity() {
                 R.string.sound_ocean_subtitle,
                 R.drawable.bg_sound_ocean
             )
-
             SOUND_RAIN -> Triple(
                 R.string.sound_rain_title,
                 R.string.sound_rain_subtitle,
                 R.drawable.bg_sound_rain
             )
-
             SOUND_BROWN -> Triple(
                 R.string.sound_brown_title,
                 R.string.sound_brown_subtitle,
                 R.drawable.bg_sound_brown
             )
-
             else -> Triple(
                 R.string.sound_ocean_title,
                 R.string.sound_ocean_subtitle,
@@ -110,67 +109,74 @@ class SoundDetailActivity : AppCompatActivity() {
 
         soundTitle.setText(titleRes)
         soundDescription.setText(descriptionRes)
-        root.setBackgroundResource(backgroundRes)
+
+        val backgroundView: View = findViewById(R.id.soundBackground)
+        backgroundView.setBackgroundResource(backgroundRes)
     }
 
-    private fun ensureMediaPlayer(): MediaPlayer {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(
-                this,
-                when (soundKey) {
-                    SOUND_OCEAN -> R.raw.ocean_waves
-                    SOUND_RAIN -> R.raw.rain
-                    SOUND_BROWN -> R.raw.ocean_waves
-                    else -> R.raw.ocean_waves
-                }
-            )
-            mediaPlayer?.isLooping = true
+    private fun ensureMediaPlayer() {
+        if (mediaPlayer != null) return
+
+        val resId = when (soundKey) {
+            SOUND_OCEAN -> R.raw.ocean_waves
+            SOUND_RAIN -> R.raw.rain
+            SOUND_BROWN -> R.raw.rain
+            else -> R.raw.ocean_waves
         }
-        return mediaPlayer!!
+
+        mediaPlayer = MediaPlayer.create(this, resId).apply {
+            isLooping = true
+            setVolume(0f, 0f)
+        }
     }
 
     private fun fadeInAndStart() {
-        fadeAnimator?.cancel()
-
-        val player = ensureMediaPlayer()
-        player.setVolume(0f, 0f)
-        player.start()
         isPlaying = true
         playPauseButton.setImageResource(R.drawable.ic_pause)
         playPauseButton.contentDescription = getString(R.string.sound_pause_label)
+
+        ensureMediaPlayer()
+        val player = mediaPlayer ?: return
+
+        fadeAnimator?.cancel()
 
         fadeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = FADE_DURATION_MS
             interpolator = AccelerateDecelerateInterpolator()
             addUpdateListener { animator ->
-                val volume = animator.animatedValue as Float
-                player.setVolume(volume, volume)
+                val v = animator.animatedValue as Float
+                player.setVolume(v, v)
             }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    if (!player.isPlaying) {
+                        player.start()
+                    }
+                }
+            })
             start()
         }
     }
 
     private fun fadeOutAndPause() {
-        fadeAnimator?.cancel()
+        isPlaying = false
+        playPauseButton.setImageResource(R.drawable.ic_play)
+        playPauseButton.contentDescription = getString(R.string.sound_play_label)
 
         val player = mediaPlayer ?: return
+
+        fadeAnimator?.cancel()
 
         fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             duration = FADE_DURATION_MS
             interpolator = AccelerateDecelerateInterpolator()
             addUpdateListener { animator ->
-                val volume = animator.animatedValue as Float
-                player.setVolume(volume, volume)
+                val v = animator.animatedValue as Float
+                player.setVolume(v, v)
             }
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    if (player.isPlaying) {
-                        player.pause()
-                    }
-                    isPlaying = false
-                    playPauseButton.setImageResource(R.drawable.ic_play)
-                    playPauseButton.contentDescription =
-                        getString(R.string.sound_play_label)
+                    player.pause()
                 }
             })
             start()
