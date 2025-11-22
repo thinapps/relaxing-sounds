@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.2.1
+- added a unified ripple effect color for cards and wired all home screen cards to use it for a more consistent touch response
+- improved the play/pause button with a subtle tap bounce animation to make playback actions feel more responsive
+
 ### 0.2.0
 - migrated the app fully to Material Design 3 with explicit color role assignments in colors.xml and themes.xml to eliminate mixed or default styling
 - standardized dark mode surfaces across the entire UI including status and navigation bars for a more consistent appearance
