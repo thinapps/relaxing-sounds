@@ -10,7 +10,7 @@
     <View
         android:id="@+id/top_gradient"
         android:layout_width="0dp"
-        android:layout_height="96dp"
+        android:layout_height="72dp"
         android:background="@drawable/bg_toolbar_gradient"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
                 android:textColor="@color/rs_color_on_background"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="4dp" />
 
             <TextView
@@ -51,19 +51,18 @@
                 android:text="@string/main_subtitle"
                 android:textColor="@color/rs_color_on_background"
                 android:textSize="16sp"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="20dp" />
 
             <!-- ocean waves card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_ocean_waves"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_ripple"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,12 +97,11 @@
                 android:id="@+id/card_rain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_ripple"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,13 +136,12 @@
                 android:id="@+id/card_brown_noise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
                 android:foreground="?attr/selectableItemBackground"
                 app:rippleColor="@color/rs_color_ripple"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
