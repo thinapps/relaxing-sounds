@@ -45,7 +45,7 @@
     <color name="rs_color_play_button_fill">#33FFFFFF</color>
     <color name="rs_color_play_button_stroke">#55FFFFFF</color>
 
-    <!-- unified ripple for cards and buttons -->
-    <color name="rs_color_ripple">#33FFFFFF</color>
+    <!-- unified ripple for touch feedback -->
+    <color name="rs_color_ripple">#22FFFFFF</color>
 
 </resources>
