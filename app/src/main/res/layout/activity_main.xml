@@ -53,13 +53,14 @@
                 android:textSize="16sp"
                 android:paddingBottom="16dp" />
 
+            <!-- ocean waves card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_ocean_waves"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:foreground="?attr/selectableItemBackground"
-                app:rippleColor="@color/rs_color_on_background"
+                app:rippleColor="@color/rs_color_ripple"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp"
                 app:strokeWidth="0dp">
@@ -92,13 +93,14 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- rain card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_rain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:foreground="?attr/selectableItemBackground"
-                app:rippleColor="@color/rs_color_on_background"
+                app:rippleColor="@color/rs_color_ripple"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp"
                 app:strokeWidth="0dp">
@@ -131,14 +133,15 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- brown noise card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_brown_noise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:foreground="?attr/selectableItemBackground"
-                app:rippleColor="@color/rs_color_on_background"
+                app:rippleColor="@color/rs_color_ripple"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="2dp"
                 app:strokeWidth="0dp">
