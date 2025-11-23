@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.3.0
+- added a sleep timer icon on the sound detail screen with simple presets for off, 15, 30, and 60 minutes
+- wired the sleep timer to fade out and pause playback automatically when the selected duration finishes
+- kept all timer behavior local to the current session with no tracking, history, or background scheduling
+
 ### 0.2.2
 - refined home screen spacing and adjusted toolbar gradient height for a cleaner visual hierarchy
 - updated card styling with consistent corner radius and Material3-based elevation behavior
