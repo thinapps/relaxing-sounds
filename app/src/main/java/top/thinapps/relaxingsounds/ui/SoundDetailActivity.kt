@@ -57,6 +57,10 @@ class SoundDetailActivity : AppCompatActivity() {
         // immersive toolbar + themed nav arrow tint
         toolbar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         toolbar.elevation = 0f
+        toolbar.navigationIcon = ContextCompat.getDrawable(
+            this,
+            androidx.appcompat.R.drawable.abc_ic_ab_back_material
+        )
         toolbar.setNavigationIconTint(
             ContextCompat.getColor(this, R.color.rs_color_on_background)
         )
