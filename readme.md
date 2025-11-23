@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.3.2
+- centered the title and subtitle on the sound detail screen
+- removed the gradient/header overlay so the background is seamless behind the toolbar
+- increased size of the “Set Timer” icon and label for better visibility
+
 ### 0.3.1
 - sleep timer control is now more prominently located beneath the play/pause button
 - added text label next to the clock icon for clearer functionality
