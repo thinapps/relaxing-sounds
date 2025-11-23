@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.3.5
+- added a “Custom” option to the sleep timer with a simple minute picker (5–120 minutes)
+- custom timer values now work with the existing countdown display on the sound detail screen
+- no settings or preferences are stored; timer choices are used only for the current session
+
 ### 0.3.4
 - sleep timer now shows a live countdown on the sound detail screen after it is set
 - “Set Timer” label is automatically replaced by a `mm:ss` timer while active and restored when the timer ends or is turned off
