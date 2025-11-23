@@ -30,7 +30,7 @@ class SoundDetailActivity : AppCompatActivity() {
     private lateinit var soundTitle: TextView
     private lateinit var soundDescription: TextView
     private lateinit var playPauseButton: ImageButton
-    private lateinit var sleepTimerButton: ImageButton
+    private lateinit var sleepTimerButton: View
 
     private val sleepTimerHandler = Handler(Looper.getMainLooper())
     private var sleepTimerRunnable: Runnable? = null
@@ -45,7 +45,7 @@ class SoundDetailActivity : AppCompatActivity() {
         soundTitle = findViewById(R.id.soundTitle)
         soundDescription = findViewById(R.id.soundDescription)
         playPauseButton = findViewById(R.id.playPauseButton)
-        sleepTimerButton = findViewById(R.id.sleepTimerButton)
+        sleepTimerButton = findViewById(R.id.sleepTimerContainer)
 
         soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
