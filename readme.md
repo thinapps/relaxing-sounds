@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.3.6
+- selecting “Custom” in the sleep timer now jumps directly to the minute picker without needing an extra confirm tap
+
 ### 0.3.5
 - added a “Custom” option to the sleep timer with a simple minute picker (5–120 minutes)
 - custom timer values now work with the existing countdown display on the sound detail screen
