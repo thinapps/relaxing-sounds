@@ -232,20 +232,21 @@ class SoundDetailActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle(R.string.sleep_timer_title)
-            .setSingleChoiceItems(labels, currentIndex) { _, which ->
+            .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
                 selectedIndex = which
-            }
-            .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                val minutes = optionMinutes[selectedIndex]
-                applySleepTimerSelection(minutes)
-                dialog.dismiss()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .setOnDismissListener {
-                if (selectedIndex == labels.lastIndex) {
+                if (which == labels.lastIndex) {
+                    dialog.dismiss()
                     showCustomSleepTimerDialog()
                 }
             }
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                if (selectedIndex != labels.lastIndex) {
+                    val minutes = optionMinutes[selectedIndex]
+                    applySleepTimerSelection(minutes)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
