@@ -17,14 +17,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <View
-        android:id="@+id/scrim"
+        android:id="@+id/gradientOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#80000000"
-        app:layout_constraintTop_toTopOf="@id/soundBackground"
-        app:layout_constraintBottom_toBottomOf="@id/soundBackground"
-        app:layout_constraintStart_toStartOf="@id/soundBackground"
-        app:layout_constraintEnd_toEndOf="@id/soundBackground" />
+        android:background="@drawable/bg_toolbar_gradient"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/soundTitle" />
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -37,19 +37,6 @@
         app:titleTextColor="@color/rs_color_on_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageButton
-        android:id="@+id/sleepTimerButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_lock_idle_alarm"
-        android:tint="@color/rs_color_on_background"
-        android:contentDescription="@string/sleep_timer_icon_content_description"
-        android:padding="4dp"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
@@ -95,8 +82,38 @@
         app:layout_constraintWidth_percent="0.35"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/soundDescription"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sleepTimerContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/sleepTimerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/playPauseButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@android:drawable/ic_lock_idle_alarm"
+            android:tint="@color/rs_color_on_background"
+            android:contentDescription="@string/sleep_timer_icon_content_description" />
+
+        <TextView
+            android:id="@+id/sleepTimerLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/sleep_timer_button_label"
+            android:textColor="@color/rs_color_on_background"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
