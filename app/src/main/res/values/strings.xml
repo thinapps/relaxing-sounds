@@ -31,5 +31,6 @@
     <string name="sleep_timer_set_message">Sleep timer set to %1$d minutes</string>
     <string name="sleep_timer_off_message">Sleep timer turned off</string>
     <string name="sleep_timer_icon_content_description">Set sleep timer</string>
+    <string name="sleep_timer_button_label">Set Timer</string>
 
 </resources>
