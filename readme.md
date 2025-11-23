@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.3.7
+- fixed a bug where selecting “Custom” for the sleep timer sometimes still required tapping OK first
+- improved the reliability of automatically opening the number picker on future selections of “Custom”
+- updated sleep timer dialogs to use a consistent dark theme with branded app colors
+
 ### 0.3.6
 - selecting “Custom” in the sleep timer now jumps directly to the minute picker without needing an extra confirm tap
 
