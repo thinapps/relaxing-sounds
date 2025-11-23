@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.3.3
+- fixed missing back arrow on the sound detail screen and ensured it is always visible on dark backgrounds
+- adjusted home screen header so the title and subtitle sit fully inside the gradient background
+- removed fixed height and linked gradient size dynamically to header content for proper alignment
+
 ### 0.3.2
 - centered the title and subtitle on the sound detail screen
 - removed the gradient/header overlay so the background is seamless behind the toolbar
