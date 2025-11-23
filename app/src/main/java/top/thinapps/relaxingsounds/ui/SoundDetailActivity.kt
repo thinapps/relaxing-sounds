@@ -258,7 +258,7 @@ class SoundDetailActivity : AppCompatActivity() {
             wrapSelectorWheel = false
         }
 
-        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_Relaxingsounds_AlertDialog)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
             .setTitle(R.string.sleep_timer_custom)
             .setView(picker)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
