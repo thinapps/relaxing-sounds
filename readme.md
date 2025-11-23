@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.3.4
+- sleep timer now shows a live countdown on the sound detail screen after it is set
+- “Set Timer” label is automatically replaced by a `mm:ss` timer while active and restored when the timer ends or is turned off
+
 ### 0.3.3
 - fixed missing back arrow on the sound detail screen and ensured it is always visible on dark backgrounds
 - adjusted home screen header so the title and subtitle sit fully inside the gradient background
