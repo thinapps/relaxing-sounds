@@ -2,6 +2,10 @@
 
 ## Changelog
 
+## 0.3.8
+- improved sound card taps to prevent accidental double-opening of detail screens
+- minor layout tweak on sound detail screen to prevent title text overflow
+
 ### 0.3.7
 - fixed a bug where selecting “Custom” for the sleep timer sometimes still required tapping OK first
 - improved the reliability of automatically opening the number picker on future selections of “Custom”
