@@ -5,10 +5,14 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
@@ -26,6 +30,11 @@ class SoundDetailActivity : AppCompatActivity() {
     private lateinit var soundTitle: TextView
     private lateinit var soundDescription: TextView
     private lateinit var playPauseButton: ImageButton
+    private lateinit var sleepTimerButton: ImageButton
+
+    private val sleepTimerHandler = Handler(Looper.getMainLooper())
+    private var sleepTimerRunnable: Runnable? = null
+    private var sleepTimerDurationMs: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +45,7 @@ class SoundDetailActivity : AppCompatActivity() {
         soundTitle = findViewById(R.id.soundTitle)
         soundDescription = findViewById(R.id.soundDescription)
         playPauseButton = findViewById(R.id.playPauseButton)
+        sleepTimerButton = findViewById(R.id.sleepTimerButton)
 
         soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
@@ -80,6 +90,10 @@ class SoundDetailActivity : AppCompatActivity() {
             } else {
                 fadeInAndStart()
             }
+        }
+
+        sleepTimerButton.setOnClickListener {
+            showSleepTimerDialog()
         }
     }
 
@@ -156,6 +170,9 @@ class SoundDetailActivity : AppCompatActivity() {
             })
             start()
         }
+
+        // if a sleep timer is configured, schedule it
+        scheduleSleepTimerIfNeeded()
     }
 
     private fun fadeOutAndPause() {
@@ -166,6 +183,7 @@ class SoundDetailActivity : AppCompatActivity() {
         val player = mediaPlayer ?: return
 
         fadeAnimator?.cancel()
+        cancelSleepTimer()
 
         fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             duration = FADE_DURATION_MS
@@ -183,6 +201,79 @@ class SoundDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSleepTimerDialog() {
+        val optionMinutes = intArrayOf(0, 15, 30, 60)
+        val labels = arrayOf(
+            getString(R.string.sleep_timer_off),
+            getString(R.string.sleep_timer_15),
+            getString(R.string.sleep_timer_30),
+            getString(R.string.sleep_timer_60)
+        )
+
+        val currentIndex = when (sleepTimerDurationMs) {
+            15L * 60_000L -> 1
+            30L * 60_000L -> 2
+            60L * 60_000L -> 3
+            else -> 0
+        }
+
+        var selectedIndex = currentIndex
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.sleep_timer_title)
+            .setSingleChoiceItems(labels, currentIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                val minutes = optionMinutes[selectedIndex]
+                sleepTimerDurationMs = minutes * 60_000L
+
+                if (sleepTimerDurationMs > 0L) {
+                    if (isPlaying) {
+                        scheduleSleepTimerIfNeeded()
+                    }
+                    Toast.makeText(
+                        this,
+                        getString(R.string.sleep_timer_set_message, minutes),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    cancelSleepTimer()
+                    Toast.makeText(
+                        this,
+                        R.string.sleep_timer_off_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun scheduleSleepTimerIfNeeded() {
+        cancelSleepTimer()
+
+        if (!isPlaying || sleepTimerDurationMs <= 0L) {
+            return
+        }
+
+        val runnable = Runnable {
+            if (isPlaying) {
+                fadeOutAndPause()
+            }
+        }
+        sleepTimerRunnable = runnable
+        sleepTimerHandler.postDelayed(runnable, sleepTimerDurationMs)
+    }
+
+    private fun cancelSleepTimer() {
+        val runnable = sleepTimerRunnable ?: return
+        sleepTimerHandler.removeCallbacks(runnable)
+        sleepTimerRunnable = null
+    }
+
     override fun onPause() {
         super.onPause()
         if (isPlaying) {
@@ -194,6 +285,7 @@ class SoundDetailActivity : AppCompatActivity() {
         super.onDestroy()
         fadeAnimator?.cancel()
         fadeAnimator = null
+        cancelSleepTimer()
         mediaPlayer?.release()
         mediaPlayer = null
     }
