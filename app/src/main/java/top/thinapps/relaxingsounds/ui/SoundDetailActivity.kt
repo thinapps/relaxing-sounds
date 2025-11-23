@@ -14,10 +14,10 @@ import android.widget.ImageButton
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import top.thinapps.relaxingsounds.R
 
 class SoundDetailActivity : AppCompatActivity() {
@@ -230,7 +230,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
         var selectedIndex = currentIndex
 
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
             .setTitle(R.string.sleep_timer_title)
             .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
                 selectedIndex = which
@@ -258,7 +258,7 @@ class SoundDetailActivity : AppCompatActivity() {
             wrapSelectorWheel = false
         }
 
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_Relaxingsounds_AlertDialog)
             .setTitle(R.string.sleep_timer_custom)
             .setView(picker)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
