@@ -237,16 +237,15 @@ class SoundDetailActivity : AppCompatActivity() {
             }
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 val minutes = optionMinutes[selectedIndex]
-
-                if (minutes == -1) {
-                    dialog.dismiss()
-                    showCustomSleepTimerDialog()
-                } else {
-                    applySleepTimerSelection(minutes)
-                    dialog.dismiss()
-                }
+                applySleepTimerSelection(minutes)
+                dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
+            .setOnDismissListener {
+                if (selectedIndex == labels.lastIndex) {
+                    showCustomSleepTimerDialog()
+                }
+            }
             .show()
     }
 
