@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.3.1
+- sleep timer control is now more prominently located beneath the play/pause button
+- added text label next to the clock icon for clearer functionality
+
 ### 0.3.0
 - added a sleep timer icon on the sound detail screen with simple presets for off, 15, 30, and 60 minutes
 - wired the sleep timer to fade out and pause playback automatically when the selected duration finishes
