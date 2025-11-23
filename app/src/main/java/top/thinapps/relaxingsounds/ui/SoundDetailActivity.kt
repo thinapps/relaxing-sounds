@@ -11,6 +11,7 @@ import android.os.SystemClock
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
+import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -211,12 +212,13 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun showSleepTimerDialog() {
-        val optionMinutes = intArrayOf(0, 15, 30, 60)
+        val optionMinutes = intArrayOf(0, 15, 30, 60, -1)
         val labels = arrayOf(
             getString(R.string.sleep_timer_off),
             getString(R.string.sleep_timer_15),
             getString(R.string.sleep_timer_30),
-            getString(R.string.sleep_timer_60)
+            getString(R.string.sleep_timer_60),
+            getString(R.string.sleep_timer_custom)
         )
 
         val currentIndex = when (sleepTimerDurationMs) {
@@ -235,30 +237,64 @@ class SoundDetailActivity : AppCompatActivity() {
             }
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 val minutes = optionMinutes[selectedIndex]
-                sleepTimerDurationMs = minutes * 60_000L
 
-                if (sleepTimerDurationMs > 0L) {
-                    if (isPlaying) {
-                        scheduleSleepTimerIfNeeded()
-                    }
-                    Toast.makeText(
-                        this,
-                        getString(R.string.sleep_timer_set_message, minutes),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (minutes == -1) {
+                    dialog.dismiss()
+                    showCustomSleepTimerDialog()
                 } else {
-                    cancelSleepTimer()
-                    Toast.makeText(
-                        this,
-                        R.string.sleep_timer_off_message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    applySleepTimerSelection(minutes)
+                    dialog.dismiss()
                 }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
 
+    private fun showCustomSleepTimerDialog() {
+        val picker = NumberPicker(this).apply {
+            minValue = 5
+            maxValue = 120
+            value = 30
+            wrapSelectorWheel = false
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.sleep_timer_custom)
+            .setView(picker)
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                val minutes = picker.value
+                applySleepTimerSelection(minutes)
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun applySleepTimerSelection(minutes: Int) {
+        sleepTimerDurationMs = minutes.toLong() * 60_000L
+
+        if (sleepTimerDurationMs > 0L) {
+            if (isPlaying) {
+                scheduleSleepTimerIfNeeded()
+            } else {
+                val totalSeconds = sleepTimerDurationMs / 1000L
+                val m = totalSeconds / 60L
+                val s = totalSeconds % 60L
+                sleepTimerLabel.text = String.format("%d:%02d", m, s)
+            }
+            Toast.makeText(
+                this,
+                getString(R.string.sleep_timer_set_message, minutes),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            cancelSleepTimer()
+            Toast.makeText(
+                this,
+                R.string.sleep_timer_off_message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun scheduleSleepTimerIfNeeded() {
