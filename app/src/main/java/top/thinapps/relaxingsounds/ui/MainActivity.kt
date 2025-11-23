@@ -9,6 +9,8 @@ import top.thinapps.relaxingsounds.R
 
 class MainActivity : AppCompatActivity() {
 
+    private var isNavigatingToDetail = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,6 +24,11 @@ class MainActivity : AppCompatActivity() {
         cardBrown.setRelaxingClick(SoundDetailActivity.SOUND_BROWN)
     }
 
+    override fun onResume() {
+        super.onResume()
+        isNavigatingToDetail = false
+    }
+
     private fun openSoundDetail(soundKey: String) {
         val intent = Intent(this, SoundDetailActivity::class.java).apply {
             putExtra(SoundDetailActivity.EXTRA_SOUND_KEY, soundKey)
@@ -31,6 +38,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun MaterialCardView.setRelaxingClick(soundKey: String) {
         setOnClickListener {
+            if (isNavigatingToDetail) {
+                return@setOnClickListener
+            }
+            isNavigatingToDetail = true
+
             // gentle press in (faster)
             this.animate()
                 .scaleX(0.98f)
