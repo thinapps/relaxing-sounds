@@ -7,6 +7,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
@@ -31,10 +32,13 @@ class SoundDetailActivity : AppCompatActivity() {
     private lateinit var soundDescription: TextView
     private lateinit var playPauseButton: ImageButton
     private lateinit var sleepTimerButton: View
+    private lateinit var sleepTimerLabel: TextView
 
     private val sleepTimerHandler = Handler(Looper.getMainLooper())
     private var sleepTimerRunnable: Runnable? = null
     private var sleepTimerDurationMs: Long = 0L
+    private var sleepTimerEndRealtime: Long = 0L
+    private var sleepTimerCountdownRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,7 @@ class SoundDetailActivity : AppCompatActivity() {
         soundDescription = findViewById(R.id.soundDescription)
         playPauseButton = findViewById(R.id.playPauseButton)
         sleepTimerButton = findViewById(R.id.sleepTimerContainer)
+        sleepTimerLabel = findViewById(R.id.sleepTimerLabel)
 
         soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
 
@@ -257,25 +262,81 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun scheduleSleepTimerIfNeeded() {
-        cancelSleepTimer()
+        sleepTimerRunnable?.let {
+            sleepTimerHandler.removeCallbacks(it)
+            sleepTimerRunnable = null
+        }
 
         if (!isPlaying || sleepTimerDurationMs <= 0L) {
+            sleepTimerEndRealtime = 0L
+            cancelSleepTimerCountdown()
+            updateSleepTimerLabelForOffState()
             return
         }
+
+        sleepTimerEndRealtime = SystemClock.elapsedRealtime() + sleepTimerDurationMs
 
         val runnable = Runnable {
             if (isPlaying) {
                 fadeOutAndPause()
+            } else {
+                cancelSleepTimer()
             }
         }
         sleepTimerRunnable = runnable
         sleepTimerHandler.postDelayed(runnable, sleepTimerDurationMs)
+
+        startSleepTimerCountdown()
     }
 
     private fun cancelSleepTimer() {
-        val runnable = sleepTimerRunnable ?: return
-        sleepTimerHandler.removeCallbacks(runnable)
-        sleepTimerRunnable = null
+        sleepTimerRunnable?.let {
+            sleepTimerHandler.removeCallbacks(it)
+            sleepTimerRunnable = null
+        }
+        sleepTimerEndRealtime = 0L
+        cancelSleepTimerCountdown()
+        updateSleepTimerLabelForOffState()
+    }
+
+    private fun startSleepTimerCountdown() {
+        cancelSleepTimerCountdown()
+
+        if (sleepTimerDurationMs <= 0L || sleepTimerEndRealtime <= 0L) {
+            updateSleepTimerLabelForOffState()
+            return
+        }
+
+        val runnable = object : Runnable {
+            override fun run() {
+                val remaining = sleepTimerEndRealtime - SystemClock.elapsedRealtime()
+                if (remaining <= 0L || !isPlaying) {
+                    cancelSleepTimer()
+                    return
+                }
+
+                val totalSeconds = remaining / 1000L
+                val minutes = totalSeconds / 60L
+                val seconds = totalSeconds % 60L
+                sleepTimerLabel.text = String.format("%d:%02d", minutes, seconds)
+
+                sleepTimerHandler.postDelayed(this, 1000L)
+            }
+        }
+
+        sleepTimerCountdownRunnable = runnable
+        sleepTimerHandler.post(runnable)
+    }
+
+    private fun cancelSleepTimerCountdown() {
+        sleepTimerCountdownRunnable?.let {
+            sleepTimerHandler.removeCallbacks(it)
+            sleepTimerCountdownRunnable = null
+        }
+    }
+
+    private fun updateSleepTimerLabelForOffState() {
+        sleepTimerLabel.text = getString(R.string.sleep_timer_button_label)
     }
 
     override fun onPause() {
