@@ -45,4 +45,11 @@
 
     </style>
 
+    <!-- alert dialog overlay theme -->
+    <style name="ThemeOverlay.RelaxingSounds.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/rs_color_surface_variant</item>
+        <item name="colorOnSurface">@color/rs_color_on_surface</item>
+        <item name="colorPrimary">@color/rs_color_accent</item>
+    </style>
+
 </resources>
