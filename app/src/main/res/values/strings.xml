@@ -28,6 +28,7 @@
     <string name="sleep_timer_15">15 minutes</string>
     <string name="sleep_timer_30">30 minutes</string>
     <string name="sleep_timer_60">60 minutes</string>
+    <string name="sleep_timer_custom">Custom...</string>
     <string name="sleep_timer_set_message">Sleep timer set to %1$d minutes</string>
     <string name="sleep_timer_off_message">Sleep timer turned off</string>
     <string name="sleep_timer_icon_content_description">Set sleep timer</string>
