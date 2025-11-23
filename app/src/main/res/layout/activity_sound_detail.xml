@@ -16,16 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <View
-        android:id="@+id/gradientOverlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_toolbar_gradient"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/soundTitle" />
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -49,6 +39,8 @@
         android:textColor="@color/rs_color_on_background"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -62,6 +54,8 @@
         android:layout_marginTop="12dp"
         android:textColor="@color/rs_color_on_background"
         android:textSize="16sp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/soundTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -92,16 +86,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingTop="16dp"
-        android:paddingBottom="24dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="28dp"
         app:layout_constraintTop_toBottomOf="@id/playPauseButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@android:drawable/ic_lock_idle_alarm"
             android:tint="@color/rs_color_on_background"
             android:contentDescription="@string/sleep_timer_icon_content_description" />
@@ -110,10 +104,10 @@
             android:id="@+id/sleepTimerLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
             android:text="@string/sleep_timer_button_label"
             android:textColor="@color/rs_color_on_background"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
