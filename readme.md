@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.1
+- fixed a crash when opening a sound by adding the required media playback foreground-service permission to AndroidManifest.xml
+
 ### 0.4.0
 - added a full background playback system by introducing a new foreground service (implemented in `playback/SoundPlaybackService.kt`) to handle audio, fading, and lifecycle-safe playback
 - added a media-style notification with quick play/pause and stop controls, powered by the new helper class `notifications/NotificationHelper.kt`
