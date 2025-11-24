@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import android.support.v4.media.session.MediaSessionCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 import top.thinapps.relaxingsounds.ui.SoundDetailActivity
@@ -38,7 +39,8 @@ object NotificationHelper {
     fun buildPlaybackNotification(
         context: Context,
         isPlaying: Boolean,
-        soundKey: String?
+        soundKey: String?,
+        sessionToken: MediaSessionCompat.Token
     ): Notification {
         val title = getSoundTitle(context, soundKey)
         val statusText = if (isPlaying) {
@@ -120,6 +122,7 @@ object NotificationHelper {
             .setOnlyAlertOnce(true)
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
+                    .setMediaSession(sessionToken)        // ← ADDED
                     .setShowActionsInCompactView(0, 1)
             )
             .addAction(toggleAction)
