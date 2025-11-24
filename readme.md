@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.2 
+- updated AndroidManifest.xml to include both required permissions for Android 14+ foreground media playback (`FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_MEDIA_PLAYBACK`)
+
 ### 0.4.1
 - fixed a crash when opening a sound by adding the required media playback foreground-service permission to AndroidManifest.xml
 
