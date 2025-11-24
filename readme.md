@@ -2,6 +2,15 @@
 
 ## Changelog
 
+### 0.4.0
+- added a full background playback system by introducing a new foreground service (implemented in `playback/SoundPlaybackService.kt`) to handle audio, fading, and lifecycle-safe playback
+- added a media-style notification with quick play/pause and stop controls, powered by the new helper class `notifications/NotificationHelper.kt`
+- introduced a dedicated monochrome wave icon for status-bar branding (`res/drawable/ic_notification_small.xml`) and a new stop action icon (`res/drawable/ic_stop.xml`) to complete the notification UI
+- updated `SoundDetailActivity.kt` to route all playback actions through the new service while keeping the UI and timer behavior identical to before
+- updated `AndroidManifest.xml` to register the new playback service using `foregroundServiceType="mediaPlayback"`
+- playback now continues when the app is backgrounded or the screen is off, with smooth fade-in/out preserved exactly as in earlier versions
+- pausing playback now leaves a dismissible “Paused” notification that remains visible until swiped away or stopped
+
 ## 0.3.8
 - improved sound card taps to prevent accidental double-opening of detail screens
 - minor layout tweak on sound detail screen to prevent title text overflow
