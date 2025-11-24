@@ -2,8 +2,7 @@ package top.thinapps.relaxingsounds.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
-import android.media.MediaPlayer
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,11 +18,10 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import top.thinapps.relaxingsounds.R
+import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 
 class SoundDetailActivity : AppCompatActivity() {
 
-    private var mediaPlayer: MediaPlayer? = null
-    private var fadeAnimator: ValueAnimator? = null
     private var isPlaying: Boolean = false
     private lateinit var soundKey: String
 
@@ -57,8 +55,8 @@ class SoundDetailActivity : AppCompatActivity() {
 
         setupUiForSound(soundKey)
 
-        // auto start playback with fade-in
-        fadeInAndStart()
+        // auto start playback via service
+        startPlayback(initial = true)
 
         // immersive toolbar + themed nav arrow tint
         toolbar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
@@ -96,9 +94,9 @@ class SoundDetailActivity : AppCompatActivity() {
                 .start()
 
             if (isPlaying) {
-                fadeOutAndPause()
+                pausePlayback()
             } else {
-                fadeInAndStart()
+                startPlayback(initial = false)
             }
         }
 
@@ -138,77 +136,32 @@ class SoundDetailActivity : AppCompatActivity() {
         backgroundView.setBackgroundResource(backgroundRes)
     }
 
-    private fun ensureMediaPlayer() {
-        if (mediaPlayer != null) return
-
-        val resId = when (soundKey) {
-            SOUND_OCEAN -> R.raw.ocean_waves
-            SOUND_RAIN -> R.raw.rain
-            SOUND_BROWN -> R.raw.rain
-            else -> R.raw.ocean_waves
-        }
-
-        mediaPlayer = MediaPlayer.create(this, resId).apply {
-            isLooping = true
-            setVolume(0f, 0f)
-        }
-    }
-
-    private fun fadeInAndStart() {
+    private fun startPlayback(initial: Boolean) {
         isPlaying = true
         playPauseButton.setImageResource(R.drawable.ic_pause)
         playPauseButton.contentDescription = getString(R.string.sound_pause_label)
 
-        ensureMediaPlayer()
-        val player = mediaPlayer ?: return
-
-        fadeAnimator?.cancel()
-
-        fadeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = FADE_DURATION_MS
-            interpolator = AccelerateDecelerateInterpolator()
-            addUpdateListener { animator ->
-                val v = animator.animatedValue as Float
-                player.setVolume(v, v)
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator) {
-                    if (!player.isPlaying) {
-                        player.start()
-                    }
-                }
-            })
-            start()
+        val intent = Intent(this, SoundPlaybackService::class.java).apply {
+            action = SoundPlaybackService.ACTION_PLAY
+            putExtra(SoundPlaybackService.EXTRA_SOUND_KEY, soundKey)
         }
+        ContextCompat.startForegroundService(this, intent)
 
         // if a sleep timer is configured, schedule it
         scheduleSleepTimerIfNeeded()
     }
 
-    private fun fadeOutAndPause() {
+    private fun pausePlayback() {
         isPlaying = false
         playPauseButton.setImageResource(R.drawable.ic_play)
         playPauseButton.contentDescription = getString(R.string.sound_play_label)
 
-        val player = mediaPlayer ?: return
-
-        fadeAnimator?.cancel()
-        cancelSleepTimer()
-
-        fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
-            duration = FADE_DURATION_MS
-            interpolator = AccelerateDecelerateInterpolator()
-            addUpdateListener { animator ->
-                val v = animator.animatedValue as Float
-                player.setVolume(v, v)
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    player.pause()
-                }
-            })
-            start()
+        val intent = Intent(this, SoundPlaybackService::class.java).apply {
+            action = SoundPlaybackService.ACTION_PAUSE
         }
+        startService(intent)
+
+        cancelSleepTimer()
     }
 
     private fun showSleepTimerDialog() {
@@ -314,7 +267,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
         val runnable = Runnable {
             if (isPlaying) {
-                fadeOutAndPause()
+                pausePlayback()
             } else {
                 cancelSleepTimer()
             }
@@ -377,18 +330,13 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (isPlaying) {
-            fadeOutAndPause()
-        }
+        // let playback continue in the service; only stop countdown ui
+        cancelSleepTimerCountdown()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        fadeAnimator?.cancel()
-        fadeAnimator = null
         cancelSleepTimer()
-        mediaPlayer?.release()
-        mediaPlayer = null
     }
 
     companion object {
@@ -396,7 +344,5 @@ class SoundDetailActivity : AppCompatActivity() {
         const val SOUND_OCEAN = "ocean"
         const val SOUND_RAIN = "rain"
         const val SOUND_BROWN = "brown"
-
-        private const val FADE_DURATION_MS = 800L
     }
 }
