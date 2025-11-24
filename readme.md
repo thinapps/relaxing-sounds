@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.4
+- fixed back navigation behavior so both the toolbar back arrow and Android system back button now trigger the same fade-out pause as the play/pause button (no more instant stop)
+- raised the “Set Timer” section higher on the screen for better balance with the play button
+- increased padding and text size in the timer row to improve touch target and overall usability
+
 ## 0.4.3
 - updated SoundDetailActivity to stop playback and close the screen when using either the toolbar back button or the Android system back button (sending ACTION_STOP to SoundPlaybackService)
 - updated AndroidManifest.xml to request `POST_NOTIFICATIONS` so the playback notification bar reliably appears on Android 13+ once the user grants permission
