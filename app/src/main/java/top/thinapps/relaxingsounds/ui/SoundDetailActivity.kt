@@ -106,14 +106,14 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // stop playback and close screen when system back is used
+        // stop playback (with fade-out via service) and close screen
         stopPlaybackAndFinish()
     }
 
     private fun stopPlaybackAndFinish() {
-        // always tell the service to stop, even if already paused
+        // use the same fade-out logic as the pause button by sending ACTION_PAUSE
         val intent = Intent(this, SoundPlaybackService::class.java).apply {
-            action = SoundPlaybackService.ACTION_STOP
+            action = SoundPlaybackService.ACTION_PAUSE
         }
         startService(intent)
 
