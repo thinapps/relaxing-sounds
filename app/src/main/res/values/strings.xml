@@ -34,4 +34,12 @@
     <string name="sleep_timer_icon_content_description">Set sleep timer</string>
     <string name="sleep_timer_button_label">Set Timer</string>
 
+    <!-- notification (0.4.0) -->
+    <string name="notification_channel_playback">Relaxing Sounds playback</string>
+    <string name="notification_status_playing">Playing</string>
+    <string name="notification_status_paused">Paused</string>
+    <string name="notification_action_play">Play</string>
+    <string name="notification_action_pause">Pause</string>
+    <string name="notification_action_stop">Stop</string>
+
 </resources>
