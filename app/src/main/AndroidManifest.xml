@@ -3,6 +3,7 @@
     package="top.thinapps.relaxingsounds">
 
     <!-- required for media playback foreground service on modern Android -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
@@ -26,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <!-- New foreground playback service for 0.4.0 -->
+        <!-- Foreground playback service -->
         <service
             android:name=".playback.SoundPlaybackService"
             android:exported="false"
