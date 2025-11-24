@@ -8,10 +8,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RelaxingSounds">
 
+        <!-- Sound detail screen -->
         <activity
             android:name=".ui.SoundDetailActivity"
             android:exported="false" />
 
+        <!-- Main launcher activity -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -20,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- New foreground playback service for 0.4.0 -->
+        <service
+            android:name=".playback.SoundPlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
     </application>
 
