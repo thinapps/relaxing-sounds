@@ -182,19 +182,51 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun showSleepTimerDialog() {
-        val optionMinutes = intArrayOf(0, 15, 30, 60, -1)
+        // minutes for each preset; last entry is "Custom..."
+        val optionMinutes = intArrayOf(
+            0,    // Off
+            15,
+            30,
+            45,
+            60,
+            90,
+            120,
+            180,
+            240,
+            360,
+            480,
+            720,
+            -1    // Custom
+        )
+
         val labels = arrayOf(
             getString(R.string.sleep_timer_off),
             getString(R.string.sleep_timer_15),
             getString(R.string.sleep_timer_30),
+            getString(R.string.sleep_timer_45),
             getString(R.string.sleep_timer_60),
+            getString(R.string.sleep_timer_90),
+            getString(R.string.sleep_timer_120),
+            getString(R.string.sleep_timer_180),
+            getString(R.string.sleep_timer_240),
+            getString(R.string.sleep_timer_360),
+            getString(R.string.sleep_timer_480),
+            getString(R.string.sleep_timer_720),
             getString(R.string.sleep_timer_custom)
         )
 
         val currentIndex = when (sleepTimerDurationMs) {
             15L * 60_000L -> 1
             30L * 60_000L -> 2
-            60L * 60_000L -> 3
+            45L * 60_000L -> 3
+            60L * 60_000L -> 4
+            90L * 60_000L -> 5
+            120L * 60_000L -> 6
+            180L * 60_000L -> 7
+            240L * 60_000L -> 8
+            360L * 60_000L -> 9
+            480L * 60_000L -> 10
+            720L * 60_000L -> 11
             else -> 0
         }
 
@@ -223,7 +255,7 @@ class SoundDetailActivity : AppCompatActivity() {
     private fun showCustomSleepTimerDialog() {
         val picker = NumberPicker(this).apply {
             minValue = 5
-            maxValue = 120
+            maxValue = 720
             value = 30
             wrapSelectorWheel = false
         }
