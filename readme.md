@@ -2,6 +2,14 @@
 
 ## Changelog
 
+### 0.4.6
+- added full `MediaSessionCompat` integration to enable Android’s system media tray  
+- added proper playback state updates (play, pause, stop) for system UI sync  
+- notifications now support lock-screen controls and Bluetooth headset actions  
+- updated `SoundPlaybackService` to broadcast active media session state  
+- updated `NotificationHelper` to link notifications with the MediaSession token  
+- improved overall notification behavior during fade-in and fade-out playback  
+
 ### 0.4.5
 - repositioned the play button lower to restore proper visual centering on the sound detail screen
 - expanded sleep timer presets with a full range of practical long-duration options: 15, 30, 45, 60, 90, 120, 180, 240, 360, 480, and 720 minutes, plus Custom
