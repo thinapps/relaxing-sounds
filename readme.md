@@ -2,6 +2,10 @@
 
 ## Changelog
 
+## 0.4.3
+- updated SoundDetailActivity to stop playback and close the screen when using either the toolbar back button or the Android system back button (sending ACTION_STOP to SoundPlaybackService)
+- updated AndroidManifest.xml to request `POST_NOTIFICATIONS` so the playback notification bar reliably appears on Android 13+ once the user grants permission
+
 ### 0.4.2 
 - updated AndroidManifest.xml to include both required permissions for Android 14+ foreground media playback (`FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_MEDIA_PLAYBACK`)
 
