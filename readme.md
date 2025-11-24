@@ -5,7 +5,7 @@
 ### 0.4.5
 - repositioned the play button lower to restore proper visual centering on the sound detail screen
 - expanded sleep timer presets with a full range of practical long-duration options: 15, 30, 45, 60, 90, 120, 180, 240, 360, 480, and 720 minutes, plus Custom
-- Updated timer dialog, preset mapping, and custom picker (now up to 12 hours)
+- updated timer dialog, preset mapping, and custom picker (now up to 12 hours)
 
 ### 0.4.4
 - fixed back navigation behavior so both the toolbar back arrow and Android system back button now trigger the same fade-out pause as the play/pause button (no more instant stop)
