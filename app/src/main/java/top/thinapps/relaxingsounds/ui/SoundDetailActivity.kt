@@ -70,7 +70,7 @@ class SoundDetailActivity : AppCompatActivity() {
         )
 
         toolbar.setNavigationOnClickListener {
-            finish()
+            stopPlaybackAndFinish()
         }
 
         playPauseButton.setOnClickListener {
@@ -103,6 +103,23 @@ class SoundDetailActivity : AppCompatActivity() {
         sleepTimerButton.setOnClickListener {
             showSleepTimerDialog()
         }
+    }
+
+    override fun onBackPressed() {
+        // stop playback and close screen when system back is used
+        stopPlaybackAndFinish()
+    }
+
+    private fun stopPlaybackAndFinish() {
+        // always tell the service to stop, even if already paused
+        val intent = Intent(this, SoundPlaybackService::class.java).apply {
+            action = SoundPlaybackService.ACTION_STOP
+        }
+        startService(intent)
+
+        isPlaying = false
+        cancelSleepTimer()
+        finish()
     }
 
     private fun setupUiForSound(key: String) {
@@ -330,7 +347,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // let playback continue in the service; only stop countdown ui
+        // let playback continue in the background; only stop countdown ui
         cancelSleepTimerCountdown()
     }
 
