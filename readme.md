@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.12
+- added `ACTION_REQUEST_STATE` to SoundPlaybackService and implemented immediate playback-state broadcasting when requested
+- updated SoundDetailActivity to call a state-sync request on resume so the play/pause button always matches the actual playback state
+- fixed issue where toggling playback from the notification tray could leave the detail screen showing a stale icon
+
 ### 0.4.11
 - updated SoundDetailActivity, MainActivity, and NotificationHelper to support a new `launch_source` flag that controls when auto-play should occur
 - home-screen navigation now triggers auto-play via `source_main`, while notification-tray taps use `source_notification` to open the app without altering playback
