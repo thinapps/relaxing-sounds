@@ -105,6 +105,11 @@ class SoundPlaybackService : Service() {
             ACTION_DISMISS -> {
                 stopPlaybackAndSelf()
             }
+
+            // NEW: respond to explicit state requests from SoundDetailActivity
+            ACTION_REQUEST_STATE -> {
+                broadcastPlaybackState(isPlaying, currentSoundKey)
+            }
         }
 
         return START_NOT_STICKY
@@ -289,6 +294,10 @@ class SoundPlaybackService : Service() {
             "top.thinapps.relaxingsounds.action.PLAYBACK_STATE"
         const val EXTRA_IS_PLAYING = "extra_is_playing"
         const val EXTRA_CURRENT_SOUND_KEY = "extra_current_sound_key"
+
+        // NEW — sync action
+        const val ACTION_REQUEST_STATE =
+            "top.thinapps.relaxingsounds.action.REQUEST_STATE"
 
         private const val FADE_DURATION_MS = 800L
     }
