@@ -105,8 +105,7 @@ class SoundPlaybackService : Service() {
             ACTION_DISMISS -> {
                 stopPlaybackAndSelf()
             }
-
-            // NEW: respond to explicit state requests from SoundDetailActivity
+            // respond to explicit state requests from SoundDetailActivity
             ACTION_REQUEST_STATE -> {
                 broadcastPlaybackState(isPlaying, currentSoundKey)
             }
@@ -210,6 +209,9 @@ class SoundPlaybackService : Service() {
             playbackState.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1f).build()
         )
 
+        // broadcast paused state immediately so UI can update play/pause icon with no delay
+        broadcastPlaybackState(false, currentSoundKey)
+
         fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             duration = FADE_DURATION_MS
             interpolator = AccelerateDecelerateInterpolator()
@@ -222,7 +224,7 @@ class SoundPlaybackService : Service() {
                     player.pause()
                     stopForeground(false)
                     updateNotification(false)
-                    broadcastPlaybackState(false, currentSoundKey)
+                    // no need to broadcast here anymore; already broadcast at pause start
                 }
             })
             start()
@@ -295,7 +297,6 @@ class SoundPlaybackService : Service() {
         const val EXTRA_IS_PLAYING = "extra_is_playing"
         const val EXTRA_CURRENT_SOUND_KEY = "extra_current_sound_key"
 
-        // NEW — sync action
         const val ACTION_REQUEST_STATE =
             "top.thinapps.relaxingsounds.action.REQUEST_STATE"
 
