@@ -5,6 +5,7 @@
 ### 0.4.9
 - removed the Stop action from the playback notification to simplify user controls  
 - updated `NotificationHelper` to display only a single play/pause toggle in the media notification
+- replaced invalid notification small icon with a proper monochrome vector to ensure the correct app icon appears in the Android media tray
 
 ### 0.4.8
 - added playback state broadcasts from `SoundPlaybackService` whenever play, pause, or stop occurs  
