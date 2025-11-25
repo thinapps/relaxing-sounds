@@ -49,12 +49,16 @@ object NotificationHelper {
             context.getString(R.string.notification_status_paused)
         }
 
-        // FIXED: clean contentIntent that opens app WITHOUT toggling playback
+        // clean contentIntent that opens app WITHOUT toggling playback
         val safeContentIntent = PendingIntent.getActivity(
             context,
             991,
             Intent(context, SoundDetailActivity::class.java).apply {
                 putExtra(SoundDetailActivity.EXTRA_SOUND_KEY, soundKey)
+                putExtra(
+                    SoundDetailActivity.EXTRA_LAUNCH_SOURCE,
+                    SoundDetailActivity.SOURCE_NOTIFICATION
+                )
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -101,7 +105,7 @@ object NotificationHelper {
             .setSmallIcon(R.drawable.ic_notification_small)
             .setContentTitle(title)
             .setContentText(statusText)
-            .setContentIntent(safeContentIntent)        // ← FIXED
+            .setContentIntent(safeContentIntent)
             .setDeleteIntent(dismissPendingIntent)
             .setOngoing(isPlaying)
             .setOnlyAlertOnce(true)
