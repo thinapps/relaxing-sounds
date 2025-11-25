@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun openSoundDetail(soundKey: String) {
         val intent = Intent(this, SoundDetailActivity::class.java).apply {
             putExtra(SoundDetailActivity.EXTRA_SOUND_KEY, soundKey)
+            putExtra(SoundDetailActivity.EXTRA_LAUNCH_SOURCE, SoundDetailActivity.SOURCE_MAIN)
         }
         startActivity(intent)
     }
