@@ -5,16 +5,8 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
 
-    <!-- simple wave glyph for notification small icon -->
+    <!-- pure white simple wave, notification-safe -->
     <path
-        android:fillColor="@color/rs_color_on_background"
-        android:pathData="M3,15
-                          c2,-2 4,-2 6,0
-                          s4,2 6,0
-                          s4,-2 6,0
-                          v2
-                          c-2,2 -4,2 -6,0
-                          s-4,-2 -6,0
-                          s-4,2 -6,0
-                          z" />
+        android:fillColor="@android:color/white"
+        android:pathData="M2,13c2,-2 4,-2 6,0s4,2 6,0s4,-2 6,0v2c-2,2 -4,2 -6,0s-4,-2 -6,0s-4,2 -6,0v-2z" />
 </vector>
