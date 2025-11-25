@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 0.4.8
+- added playback state broadcasts from `SoundPlaybackService` whenever play, pause, or stop occurs  
+- updated `SoundDetailActivity` to listen for playback state changes and keep the play/pause button in sync with system media controls  
+- ensured the detail screen UI stays accurate when audio is controlled from the notification, lock screen, or Bluetooth headset  
+- preserved existing fade-in, fade-out, and sleep timer behavior while improving syncing between service, notification, and UI  
+
 ### 0.4.7
 - added `MediaSessionCompat.Callback` to handle system-level play, pause, and stop commands  
 - fixed issue where play/pause buttons in the Android media tray were unresponsive  
