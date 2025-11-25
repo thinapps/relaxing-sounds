@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.4.7
+- added `MediaSessionCompat.Callback` to handle system-level play, pause, and stop commands  
+- fixed issue where play/pause buttons in the Android media tray were unresponsive  
+
 ### 0.4.6
 - added full `MediaSessionCompat` integration to enable Android’s system media tray  
 - added proper playback state updates (play, pause, stop) for system UI sync  
