@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.11
+- updated SoundDetailActivity, MainActivity, and NotificationHelper to support a new `launch_source` flag that controls when auto-play should occur
+- home-screen navigation now triggers auto-play via `source_main`, while notification-tray taps use `source_notification` to open the app without altering playback
+- fixed the issue where tapping the notification content unintentionally toggled playback, ensuring only the play/pause action button changes audio state
+
 ### 0.4.10
 - adjusted media notification behavior so the play/pause button only controls playback, while tapping elsewhere on the notification now just opens the sound detail screen without toggling audio
 
