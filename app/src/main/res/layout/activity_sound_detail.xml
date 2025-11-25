@@ -64,6 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- UPDATED: moved to 75% down screen -->
     <ImageButton
         android:id="@+id/playPauseButton"
         android:layout_width="0dp"
@@ -77,11 +78,13 @@
         android:scaleType="centerInside"
         android:tint="@color/rs_color_on_background"
         android:contentDescription="@string/sound_pause_label"
-        android:layout_marginTop="48dp"
         app:layout_constraintWidth_percent="0.35"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintTop_toBottomOf="@id/soundDescription"
-        app:layout_constraintBottom_toTopOf="@id/sleepTimerContainer"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
