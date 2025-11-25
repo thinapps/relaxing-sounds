@@ -89,8 +89,13 @@ class SoundDetailActivity : AppCompatActivity() {
 
         setupUiForSound(soundKey)
 
-        // auto start playback via service
-        startPlayback(initial = true)
+        val launchSource = intent.getStringExtra(EXTRA_LAUNCH_SOURCE)
+        val shouldAutoPlay = launchSource == SOURCE_MAIN
+
+        // auto start playback via service only when launched from main screen
+        if (shouldAutoPlay) {
+            startPlayback(initial = true)
+        }
 
         toolbar.navigationIcon = ContextCompat.getDrawable(
             this,
@@ -449,6 +454,11 @@ class SoundDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SOUND_KEY = "sound_key"
+        const val EXTRA_LAUNCH_SOURCE = "launch_source"
+
+        const val SOURCE_MAIN = "source_main"
+        const val SOURCE_NOTIFICATION = "source_notification"
+
         const val SOUND_OCEAN = "ocean"
         const val SOUND_RAIN = "rain"
         const val SOUND_BROWN = "brown"
