@@ -146,6 +146,11 @@ class SoundDetailActivity : AppCompatActivity() {
         registerPlaybackStateReceiver()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestPlaybackStateSync()
+    }
+
     override fun onStop() {
         super.onStop()
         unregisterPlaybackStateReceiver()
@@ -439,6 +444,14 @@ class SoundDetailActivity : AppCompatActivity() {
         }
         unregisterReceiver(playbackStateReceiver)
         playbackStateReceiverRegistered = false
+    }
+
+    private fun requestPlaybackStateSync() {
+        val intent = Intent(this, SoundPlaybackService::class.java).apply {
+            action = SoundPlaybackService.ACTION_REQUEST_STATE
+            putExtra(SoundPlaybackService.EXTRA_SOUND_KEY, soundKey)
+        }
+        startService(intent)
     }
 
     override fun onPause() {
