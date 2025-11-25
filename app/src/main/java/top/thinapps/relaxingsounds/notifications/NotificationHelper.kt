@@ -49,9 +49,10 @@ object NotificationHelper {
             context.getString(R.string.notification_status_paused)
         }
 
-        val contentIntent = PendingIntent.getActivity(
+        // FIXED: clean contentIntent that opens app WITHOUT toggling playback
+        val safeContentIntent = PendingIntent.getActivity(
             context,
-            0,
+            991,
             Intent(context, SoundDetailActivity::class.java).apply {
                 putExtra(SoundDetailActivity.EXTRA_SOUND_KEY, soundKey)
             },
@@ -96,11 +97,11 @@ object NotificationHelper {
             togglePendingIntent
         )
 
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_small)
             .setContentTitle(title)
             .setContentText(statusText)
-            .setContentIntent(contentIntent)
+            .setContentIntent(safeContentIntent)        // ← FIXED
             .setDeleteIntent(dismissPendingIntent)
             .setOngoing(isPlaying)
             .setOnlyAlertOnce(true)
@@ -110,8 +111,7 @@ object NotificationHelper {
                     .setShowActionsInCompactView(0)
             )
             .addAction(toggleAction)
-
-        return builder.build()
+            .build()
     }
 
     private fun getSoundTitle(context: Context, soundKey: String?): String {
