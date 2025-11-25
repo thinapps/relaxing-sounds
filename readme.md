@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.10
+- adjusted media notification behavior so the play/pause button only controls playback, while tapping elsewhere on the notification now just opens the sound detail screen without toggling audio
+
 ### 0.4.9
 - removed the Stop action from the playback notification to simplify user controls  
 - updated `NotificationHelper` to display only a single play/pause toggle in the media notification
