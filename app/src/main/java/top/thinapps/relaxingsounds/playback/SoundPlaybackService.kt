@@ -184,6 +184,7 @@ class SoundPlaybackService : Service() {
                             mediaSession.sessionToken
                         )
                     )
+                    broadcastPlaybackState(true, currentSoundKey)
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
@@ -216,6 +217,7 @@ class SoundPlaybackService : Service() {
                     player.pause()
                     stopForeground(false)
                     updateNotification(false)
+                    broadcastPlaybackState(false, currentSoundKey)
                 }
             })
             start()
@@ -231,6 +233,8 @@ class SoundPlaybackService : Service() {
             playbackState.setState(PlaybackStateCompat.STATE_STOPPED, 0, 1f).build()
         )
 
+        val previousKey = currentSoundKey
+
         mediaPlayer?.let {
             if (it.isPlaying) {
                 it.stop()
@@ -242,6 +246,7 @@ class SoundPlaybackService : Service() {
 
         stopForeground(true)
         NotificationManagerCompat.from(this).cancel(NotificationHelper.NOTIFICATION_ID)
+        broadcastPlaybackState(false, previousKey)
         stopSelf()
     }
 
@@ -258,6 +263,14 @@ class SoundPlaybackService : Service() {
         )
     }
 
+    private fun broadcastPlaybackState(isPlayingNow: Boolean, soundKey: String?) {
+        val intent = Intent(ACTION_PLAYBACK_STATE).apply {
+            putExtra(EXTRA_IS_PLAYING, isPlayingNow)
+            putExtra(EXTRA_CURRENT_SOUND_KEY, soundKey)
+        }
+        sendBroadcast(intent)
+    }
+
     companion object {
         const val ACTION_PLAY = "top.thinapps.relaxingsounds.action.PLAY"
         const val ACTION_PAUSE = "top.thinapps.relaxingsounds.action.PAUSE"
@@ -271,6 +284,11 @@ class SoundPlaybackService : Service() {
         const val SOUND_OCEAN = "ocean"
         const val SOUND_RAIN = "rain"
         const val SOUND_BROWN = "brown"
+
+        const val ACTION_PLAYBACK_STATE =
+            "top.thinapps.relaxingsounds.action.PLAYBACK_STATE"
+        const val EXTRA_IS_PLAYING = "extra_is_playing"
+        const val EXTRA_CURRENT_SOUND_KEY = "extra_current_sound_key"
 
         private const val FADE_DURATION_MS = 800L
     }
