@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.4.9
+- removed the Stop action from the playback notification to simplify user controls  
+- updated `NotificationHelper` to display only a single play/pause toggle in the media notification
+
 ### 0.4.8
 - added playback state broadcasts from `SoundPlaybackService` whenever play, pause, or stop occurs  
 - updated `SoundDetailActivity` to listen for playback state changes and keep the play/pause button in sync with system media controls  
