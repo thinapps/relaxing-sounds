@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.4.13
+- improved playback sync by broadcasting the paused state immediately when fade-out begins, removing the short UI delay that occurred when pausing from the notification tray
+- updated the sound detail layout so the play button and sleep-timer controls sit lower on the screen using proper vertical-bias positioning
+
 ### 0.4.12
 - added `ACTION_REQUEST_STATE` to SoundPlaybackService and implemented immediate playback-state broadcasting when requested
 - updated SoundDetailActivity to call a state-sync request on resume so the play/pause button always matches the actual playback state
