@@ -69,22 +69,12 @@ object NotificationHelper {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val stopIntent = Intent(context, SoundPlaybackService::class.java).apply {
-            action = SoundPlaybackService.ACTION_STOP
-        }
-        val stopPendingIntent = PendingIntent.getService(
-            context,
-            2,
-            stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val dismissIntent = Intent(context, SoundPlaybackService::class.java).apply {
             action = SoundPlaybackService.ACTION_DISMISS
         }
         val dismissPendingIntent = PendingIntent.getService(
             context,
-            3,
+            2,
             dismissIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -106,12 +96,6 @@ object NotificationHelper {
             togglePendingIntent
         )
 
-        val stopAction = NotificationCompat.Action(
-            R.drawable.ic_stop,
-            context.getString(R.string.notification_action_stop),
-            stopPendingIntent
-        )
-
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_small)
             .setContentTitle(title)
@@ -122,11 +106,10 @@ object NotificationHelper {
             .setOnlyAlertOnce(true)
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
-                    .setMediaSession(sessionToken)        // ← ADDED
-                    .setShowActionsInCompactView(0, 1)
+                    .setMediaSession(sessionToken)
+                    .setShowActionsInCompactView(0)
             )
             .addAction(toggleAction)
-            .addAction(stopAction)
 
         return builder.build()
     }
