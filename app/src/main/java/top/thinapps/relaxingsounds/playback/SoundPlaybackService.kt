@@ -21,7 +21,6 @@ class SoundPlaybackService : Service() {
     private var isPlaying: Boolean = false
     private var currentSoundKey: String? = null
 
-    // ADDED — minimal MediaSession support
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var playbackState: PlaybackStateCompat.Builder
 
@@ -29,21 +28,39 @@ class SoundPlaybackService : Service() {
         super.onCreate()
         NotificationHelper.createChannelIfNeeded(this)
 
-        // ADDED — initialize MediaSession
         mediaSession = MediaSessionCompat(this, "RelaxingSounds").apply {
+            setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+            )
             isActive = true
         }
 
         playbackState = PlaybackStateCompat.Builder().setActions(
             PlaybackStateCompat.ACTION_PLAY or
-            PlaybackStateCompat.ACTION_PAUSE or
-            PlaybackStateCompat.ACTION_STOP
+                PlaybackStateCompat.ACTION_PAUSE or
+                PlaybackStateCompat.ACTION_STOP
         )
 
-        // Start in paused state
         mediaSession.setPlaybackState(
             playbackState.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1f).build()
         )
+
+        mediaSession.setCallback(object : MediaSessionCompat.Callback() {
+            override fun onPlay() {
+                val key = currentSoundKey ?: return
+                preparePlayerIfNeeded(key)
+                startFadeIn()
+            }
+
+            override fun onPause() {
+                pauseWithFade()
+            }
+
+            override fun onStop() {
+                stopPlaybackAndSelf()
+            }
+        })
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -106,7 +123,6 @@ class SoundPlaybackService : Service() {
         isPlaying = false
         currentSoundKey = null
 
-        // ADDED — release media session
         mediaSession.isActive = false
         mediaSession.release()
 
@@ -143,7 +159,6 @@ class SoundPlaybackService : Service() {
         fadeAnimator?.cancel()
         isPlaying = true
 
-        // ADDED — update MediaSession to PLAYING
         mediaSession.setPlaybackState(
             playbackState.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1f).build()
         )
@@ -166,7 +181,7 @@ class SoundPlaybackService : Service() {
                             this@SoundPlaybackService,
                             true,
                             currentSoundKey,
-                            mediaSession.sessionToken // ADDED
+                            mediaSession.sessionToken
                         )
                     )
                 }
@@ -185,7 +200,6 @@ class SoundPlaybackService : Service() {
         fadeAnimator?.cancel()
         isPlaying = false
 
-        // ADDED — update MediaSession to PAUSED
         mediaSession.setPlaybackState(
             playbackState.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1f).build()
         )
@@ -213,7 +227,6 @@ class SoundPlaybackService : Service() {
         fadeAnimator = null
         isPlaying = false
 
-        // ADDED — update MediaSession to STOPPED
         mediaSession.setPlaybackState(
             playbackState.setState(PlaybackStateCompat.STATE_STOPPED, 0, 1f).build()
         )
@@ -237,7 +250,7 @@ class SoundPlaybackService : Service() {
             this,
             isPlayingNow,
             currentSoundKey,
-            mediaSession.sessionToken // ADDED
+            mediaSession.sessionToken
         )
         NotificationManagerCompat.from(this).notify(
             NotificationHelper.NOTIFICATION_ID,
