@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.14
+- fixed a rare crash when rapidly switching between sounds by cancelling fade animations before replacing the MediaPlayer instance
+
 ### 0.4.13
 - improved playback sync by broadcasting the paused state immediately when fade-out begins, removing the short UI delay that occurred when pausing from the notification tray
 - updated the sound detail layout so the play button and sleep-timer controls sit lower on the screen using proper vertical-bias positioning
