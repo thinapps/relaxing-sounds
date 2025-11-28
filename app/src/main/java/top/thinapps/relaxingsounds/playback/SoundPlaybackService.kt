@@ -105,8 +105,8 @@ class SoundPlaybackService : Service() {
             ACTION_DISMISS -> {
                 stopPlaybackAndSelf()
             }
-            // respond to explicit state requests from SoundDetailActivity
             ACTION_REQUEST_STATE -> {
+                // respond to explicit state requests from SoundDetailActivity
                 broadcastPlaybackState(isPlaying, currentSoundKey)
             }
         }
@@ -138,7 +138,20 @@ class SoundPlaybackService : Service() {
             return
         }
 
-        mediaPlayer?.release()
+        // stop any ongoing fades before touching the player
+        fadeAnimator?.cancel()
+        fadeAnimator = null
+
+        mediaPlayer?.let { player ->
+            try {
+                if (player.isPlaying) {
+                    player.stop()
+                }
+            } catch (e: IllegalStateException) {
+                // ignore; player may already be in a terminal state
+            }
+            player.release()
+        }
         mediaPlayer = null
 
         val resId = when (soundKey) {
@@ -242,11 +255,15 @@ class SoundPlaybackService : Service() {
 
         val previousKey = currentSoundKey
 
-        mediaPlayer?.let {
-            if (it.isPlaying) {
-                it.stop()
+        mediaPlayer?.let { player ->
+            try {
+                if (player.isPlaying) {
+                    player.stop()
+                }
+            } catch (e: IllegalStateException) {
+                // ignore
             }
-            it.release()
+            player.release()
         }
         mediaPlayer = null
         currentSoundKey = null
