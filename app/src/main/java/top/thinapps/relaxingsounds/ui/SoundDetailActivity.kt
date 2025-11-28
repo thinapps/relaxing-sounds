@@ -92,7 +92,6 @@ class SoundDetailActivity : AppCompatActivity() {
         val launchSource = intent.getStringExtra(EXTRA_LAUNCH_SOURCE)
         val shouldAutoPlay = launchSource == SOURCE_MAIN
 
-        // auto start playback via service only when launched from main screen
         if (shouldAutoPlay) {
             startPlayback(initial = true)
         }
@@ -110,7 +109,7 @@ class SoundDetailActivity : AppCompatActivity() {
         }
 
         playPauseButton.setOnClickListener {
-            // subtle tap bounce
+            // subtle tap bounce for nicer UX
             playPauseButton.animate()
                 .scaleX(0.96f)
                 .scaleY(0.96f)
@@ -157,12 +156,10 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // stop playback (with fade-out via service) and close screen
         stopPlaybackAndFinish()
     }
 
     private fun stopPlaybackAndFinish() {
-        // use the same fade-out logic as the pause button by sending ACTION_PAUSE
         val intent = Intent(this, SoundPlaybackService::class.java).apply {
             action = SoundPlaybackService.ACTION_PAUSE
         }
@@ -215,7 +212,6 @@ class SoundDetailActivity : AppCompatActivity() {
         }
         ContextCompat.startForegroundService(this, intent)
 
-        // if a sleep timer is configured, schedule it
         scheduleSleepTimerIfNeeded()
     }
 
@@ -233,21 +229,8 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun showSleepTimerDialog() {
-        // minutes for each preset; last entry is "Custom..."
         val optionMinutes = intArrayOf(
-            0,    // Off
-            15,
-            30,
-            45,
-            60,
-            90,
-            120,
-            180,
-            240,
-            360,
-            480,
-            720,
-            -1    // Custom
+            0, 15, 30, 45, 60, 90, 120, 180, 240, 360, 480, 720, -1
         )
 
         val labels = arrayOf(
@@ -327,13 +310,16 @@ class SoundDetailActivity : AppCompatActivity() {
         sleepTimerDurationMs = minutes.toLong() * 60_000L
 
         if (sleepTimerDurationMs > 0L) {
+
+            // Display initial HH:MM:SS when selecting timer
+            val totalSeconds = minutes * 60
+            val hours = totalSeconds / 3600
+            val mins = (totalSeconds % 3600) / 60
+            val secs = totalSeconds % 60
+            sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, mins, secs)
+
             if (isPlaying) {
                 scheduleSleepTimerIfNeeded()
-            } else {
-                val totalSeconds = sleepTimerDurationMs / 1000L
-                val m = totalSeconds / 60L
-                val s = totalSeconds % 60L
-                sleepTimerLabel.text = String.format("%d:%02d", m, s)
             }
 
             Toast.makeText(
@@ -405,11 +391,16 @@ class SoundDetailActivity : AppCompatActivity() {
                     return
                 }
 
-                val totalSeconds = remaining / 1000L
-                val minutes = totalSeconds / 60L
-                val seconds = totalSeconds % 60L
-                sleepTimerLabel.text = String.format("%d:%02d", minutes, seconds)
+                // Convert remaining milliseconds to HH:MM:SS
+                val totalSeconds = remaining / 1000
+                val hours = totalSeconds / 3600
+                val minutes = (totalSeconds % 3600) / 60
+                val seconds = totalSeconds % 60
 
+                // Update UI
+                sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+
+                // Update every second
                 sleepTimerHandler.postDelayed(this, 1000L)
             }
         }
@@ -456,7 +447,6 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // let playback continue in the background; only stop countdown ui
         cancelSleepTimerCountdown()
     }
 
