@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.19
+- updated sleep-timer display to use a consistent `HH:MM:SS` format across all presets and custom durations
+- enhanced countdown behavior to update every second for a smoother and more accurate timer experience
+- improved time-formatting logic for clarity, especially for long durations (e.g., multi-hour timers)
+
 ### 0.4.18
 - added a semi-transparent scrim behind the home screen cards to improve readability on bright backgrounds
 - kept the photo background intact while darkening only the card region for better contrast and a more intentional layout
