@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.21
+- custom sleep timer now uses a two-column layout with clear Hours and Minutes labels
+- custom number pickers are evenly spaced and centered for a cleaner modal appearance
+- NumberPicker keyboard input is disabled to avoid accidental keypad pop-ups
+
 ### 0.4.20
 - updated the sleep-timer to use a clearer and more intuitive Hours + Minutes picker instead of a single large minutes selector
 - added dedicated NumberPickers for selecting hours (0–12) and minutes (0–59), improving usability for long sleep durations
