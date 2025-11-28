@@ -294,16 +294,44 @@ class SoundDetailActivity : AppCompatActivity() {
             minValue = 0
             maxValue = 12
             value = 0
+            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         }
 
         val minutePicker = NumberPicker(this).apply {
             minValue = 0
             maxValue = 59
             value = 30
+            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         }
 
-        layout.addView(hourPicker)
-        layout.addView(minutePicker)
+        val hourLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            addView(hourPicker)
+            addView(
+                TextView(this@SoundDetailActivity).apply {
+                    text = getString(R.string.sleep_timer_hours)
+                    setPadding(0, 8, 0, 0)
+                    textSize = 14f
+                }
+            )
+        }
+
+        val minuteLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            addView(minutePicker)
+            addView(
+                TextView(this@SoundDetailActivity).apply {
+                    text = getString(R.string.sleep_timer_minutes)
+                    setPadding(0, 8, 0, 0)
+                    textSize = 14f
+                }
+            )
+        }
+
+        layout.addView(hourLayout)
+        layout.addView(minuteLayout)
 
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
             .setTitle(R.string.sleep_timer_custom)
