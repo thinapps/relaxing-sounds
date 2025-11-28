@@ -16,7 +16,6 @@ import android.widget.ImageButton
 import android.widget.NumberPicker
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
@@ -334,15 +333,8 @@ class SoundDetailActivity : AppCompatActivity() {
 
             if (isPlaying) scheduleSleepTimerIfNeeded()
 
-            Toast.makeText(
-                this,
-                getString(R.string.sleep_timer_set_message, minutes),
-                Toast.LENGTH_SHORT
-            ).show()
-
         } else {
             cancelSleepTimer()
-            Toast.makeText(this, R.string.sleep_timer_off_message, Toast.LENGTH_SHORT).show()
         }
     }
 
