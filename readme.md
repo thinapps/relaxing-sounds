@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.20
+- updated the sleep-timer to use a clearer and more intuitive Hours + Minutes picker instead of a single large minutes selector
+- added dedicated NumberPickers for selecting hours (0–12) and minutes (0–59), improving usability for long sleep durations
+- ensured consistent integration with the improved `HH:MM:SS` timer format introduced in the previous version
+
 ### 0.4.19
 - updated sleep-timer display to use a consistent `HH:MM:SS` format across all presets and custom durations
 - enhanced countdown behavior to update every second for a smoother and more accurate timer experience
