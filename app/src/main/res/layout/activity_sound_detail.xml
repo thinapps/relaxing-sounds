@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- NEW: subtle dark scrim for readability -->
+    <!-- subtle dark scrim for readability -->
     <View
         android:id="@+id/scrim"
         android:layout_width="0dp"
@@ -75,7 +75,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- shifted downward using vertical bias -->
+    <!-- play button ~75% down the screen -->
     <ImageButton
         android:id="@+id/playPauseButton"
         android:layout_width="0dp"
@@ -115,7 +115,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/ic_lock_idle_alarm"
+            android:src="@drawable/ic_sleep_timer"
             android:tint="@color/rs_color_on_background"
             android:contentDescription="@string/sleep_timer_icon_content_description" />
 
