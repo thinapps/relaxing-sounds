@@ -3,7 +3,7 @@
 ## Changelog
 
 ### 0.4.15
-- corrected brown noise playback to use a dedicated brown noise audio file instead of reusing the rain track
+- added a dedicated brown noise audio track (Brown Noise by DigitalSpa, via Pixabay) and updated SoundPlaybackService to use the correct `brown_noise.mp3` resource instead of reusing the rain sound
 
 ### 0.4.14
 - fixed a rare crash when rapidly switching between sounds by cancelling fade animations before replacing the MediaPlayer instance
