@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.17
+- replaced the stock system alarm icon in the sleep timer row with a custom sleep timer vector to better match the app’s visual style
+
 ### 0.4.16
 - added a subtle dark scrim over the sound detail background image to improve text and button readability across all wallpapers
 - improved home screen sound cards with stronger visual tap affordance using borderless ripple, card elevation, and compat padding, while keeping the existing scale animation
