@@ -14,6 +14,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.NumberPicker
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -109,7 +110,7 @@ class SoundDetailActivity : AppCompatActivity() {
         }
 
         playPauseButton.setOnClickListener {
-            // subtle tap bounce for nicer UX
+            // subtle tap bounce
             playPauseButton.animate()
                 .scaleX(0.96f)
                 .scaleY(0.96f)
@@ -128,11 +129,7 @@ class SoundDetailActivity : AppCompatActivity() {
                 })
                 .start()
 
-            if (isPlaying) {
-                pausePlayback()
-            } else {
-                startPlayback(initial = false)
-            }
+            if (isPlaying) pausePlayback() else startPlayback(initial = false)
         }
 
         sleepTimerButton.setOnClickListener {
@@ -204,7 +201,6 @@ class SoundDetailActivity : AppCompatActivity() {
     private fun startPlayback(initial: Boolean) {
         isPlaying = true
         playPauseButton.setImageResource(R.drawable.ic_pause)
-        playPauseButton.contentDescription = getString(R.string.sound_pause_label)
 
         val intent = Intent(this, SoundPlaybackService::class.java).apply {
             action = SoundPlaybackService.ACTION_PLAY
@@ -218,7 +214,6 @@ class SoundDetailActivity : AppCompatActivity() {
     private fun pausePlayback() {
         isPlaying = false
         playPauseButton.setImageResource(R.drawable.ic_play)
-        playPauseButton.contentDescription = getString(R.string.sound_play_label)
 
         val intent = Intent(this, SoundPlaybackService::class.java).apply {
             action = SoundPlaybackService.ACTION_PAUSE
@@ -286,20 +281,39 @@ class SoundDetailActivity : AppCompatActivity() {
             .show()
     }
 
+    /***
+     * Custom Timer dialog with Hours + Minutes pickers
+     */
     private fun showCustomSleepTimerDialog() {
-        val picker = NumberPicker(this).apply {
-            minValue = 5
-            maxValue = 720
-            value = 30
-            wrapSelectorWheel = false
+
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(40, 10, 40, 10)
         }
+
+        val hourPicker = NumberPicker(this).apply {
+            minValue = 0
+            maxValue = 12
+            value = 0
+        }
+
+        val minutePicker = NumberPicker(this).apply {
+            minValue = 0
+            maxValue = 59
+            value = 30
+        }
+
+        layout.addView(hourPicker)
+        layout.addView(minutePicker)
 
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
             .setTitle(R.string.sleep_timer_custom)
-            .setView(picker)
+            .setView(layout)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                val minutes = picker.value
-                applySleepTimerSelection(minutes)
+                val hours = hourPicker.value
+                val mins = minutePicker.value
+                val totalMinutes = (hours * 60) + mins
+                applySleepTimerSelection(totalMinutes)
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
@@ -311,29 +325,24 @@ class SoundDetailActivity : AppCompatActivity() {
 
         if (sleepTimerDurationMs > 0L) {
 
-            // Display initial HH:MM:SS when selecting timer
             val totalSeconds = minutes * 60
             val hours = totalSeconds / 3600
             val mins = (totalSeconds % 3600) / 60
             val secs = totalSeconds % 60
+
             sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, mins, secs)
 
-            if (isPlaying) {
-                scheduleSleepTimerIfNeeded()
-            }
+            if (isPlaying) scheduleSleepTimerIfNeeded()
 
             Toast.makeText(
                 this,
                 getString(R.string.sleep_timer_set_message, minutes),
                 Toast.LENGTH_SHORT
             ).show()
+
         } else {
             cancelSleepTimer()
-            Toast.makeText(
-                this,
-                R.string.sleep_timer_off_message,
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, R.string.sleep_timer_off_message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -353,12 +362,9 @@ class SoundDetailActivity : AppCompatActivity() {
         sleepTimerEndRealtime = SystemClock.elapsedRealtime() + sleepTimerDurationMs
 
         val runnable = Runnable {
-            if (isPlaying) {
-                pausePlayback()
-            } else {
-                cancelSleepTimer()
-            }
+            if (isPlaying) pausePlayback() else cancelSleepTimer()
         }
+
         sleepTimerRunnable = runnable
         sleepTimerHandler.postDelayed(runnable, sleepTimerDurationMs)
 
@@ -391,16 +397,13 @@ class SoundDetailActivity : AppCompatActivity() {
                     return
                 }
 
-                // Convert remaining milliseconds to HH:MM:SS
                 val totalSeconds = remaining / 1000
                 val hours = totalSeconds / 3600
                 val minutes = (totalSeconds % 3600) / 60
                 val seconds = totalSeconds % 60
 
-                // Update UI
                 sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
 
-                // Update every second
                 sleepTimerHandler.postDelayed(this, 1000L)
             }
         }
@@ -421,18 +424,14 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun registerPlaybackStateReceiver() {
-        if (playbackStateReceiverRegistered) {
-            return
-        }
+        if (playbackStateReceiverRegistered) return
         val filter = IntentFilter(SoundPlaybackService.ACTION_PLAYBACK_STATE)
         registerReceiver(playbackStateReceiver, filter)
         playbackStateReceiverRegistered = true
     }
 
     private fun unregisterPlaybackStateReceiver() {
-        if (!playbackStateReceiverRegistered) {
-            return
-        }
+        if (!playbackStateReceiverRegistered) return
         unregisterReceiver(playbackStateReceiver)
         playbackStateReceiverRegistered = false
     }
