@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.4.16
+- added a subtle dark scrim over the sound detail background image to improve text and button readability across all wallpapers
+- improved home screen sound cards with stronger visual tap affordance using borderless ripple, card elevation, and compat padding, while keeping the existing scale animation
+
 ### 0.4.15
 - added a dedicated brown noise audio track (Brown Noise by DigitalSpa, via Pixabay) and updated SoundPlaybackService to use the correct `brown_noise.mp3` resource instead of reusing the rain sound
 
