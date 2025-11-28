@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@++id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_title"
@@ -73,10 +73,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:foreground="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp"
                 app:rippleColor="@color/rs_color_ripple"
-                app:strokeWidth="0dp"
-                app:cardCornerRadius="16dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -112,10 +114,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:foreground="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp"
                 app:rippleColor="@color/rs_color_ripple"
-                app:strokeWidth="0dp"
-                app:cardCornerRadius="16dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -152,10 +156,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="24dp"
-                android:foreground="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp"
                 app:rippleColor="@color/rs_color_ripple"
-                app:strokeWidth="0dp"
-                app:cardCornerRadius="16dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
