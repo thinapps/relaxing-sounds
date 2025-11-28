@@ -157,7 +157,7 @@ class SoundPlaybackService : Service() {
         val resId = when (soundKey) {
             SOUND_OCEAN -> R.raw.ocean_waves
             SOUND_RAIN -> R.raw.rain
-            SOUND_BROWN -> R.raw.rain
+            SOUND_BROWN -> R.raw.brown_noise
             else -> R.raw.ocean_waves
         }
 
