@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 0.4.18
+- added a semi-transparent scrim behind the home screen cards to improve readability on bright backgrounds
+- kept the photo background intact while darkening only the card region for better contrast and a more intentional layout
+
 ### 0.4.17
 - replaced the stock system alarm icon in the sleep timer row with a custom sleep timer vector to better match the app’s visual style
 
