@@ -37,10 +37,10 @@ class SoundDetailActivity : AppCompatActivity() {
     private lateinit var sleepTimerLabel: TextView
 
     private val sleepTimerHandler = Handler(Looper.getMainLooper())
-    private var sleepTimerRunnable: Runnable? = null
-    private var sleepTimerDurationMs: Long = 0L
-    private var sleepTimerEndRealtime: Long = 0L
     private var sleepTimerCountdownRunnable: Runnable? = null
+
+    // T2 MODEL — store remaining seconds, not endRealtime
+    private var sleepTimerRemainingSeconds: Long = 0L
 
     private var playbackStateReceiverRegistered: Boolean = false
     private val playbackStateReceiver = object : BroadcastReceiver() {
@@ -69,6 +69,13 @@ class SoundDetailActivity : AppCompatActivity() {
                 playPauseButton.setImageResource(R.drawable.ic_play)
                 playPauseButton.contentDescription =
                     getString(R.string.sound_play_label)
+            }
+
+            // resume countdown when playback resumes
+            if (isPlaying && sleepTimerRemainingSeconds > 0L) {
+                startSleepTimerCountdown()
+            } else {
+                cancelSleepTimerCountdown()
             }
         }
     }
@@ -109,7 +116,6 @@ class SoundDetailActivity : AppCompatActivity() {
         }
 
         playPauseButton.setOnClickListener {
-            // subtle tap bounce
             playPauseButton.animate()
                 .scaleX(0.96f)
                 .scaleY(0.96f)
@@ -144,6 +150,11 @@ class SoundDetailActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         requestPlaybackStateSync()
+
+        // resume UI countdown only, not actual timer logic
+        if (isPlaying && sleepTimerRemainingSeconds > 0L) {
+            startSleepTimerCountdown()
+        }
     }
 
     override fun onStop() {
@@ -162,7 +173,7 @@ class SoundDetailActivity : AppCompatActivity() {
         startService(intent)
 
         isPlaying = false
-        cancelSleepTimer()
+        resetSleepTimer()
         finish()
     }
 
@@ -207,7 +218,9 @@ class SoundDetailActivity : AppCompatActivity() {
         }
         ContextCompat.startForegroundService(this, intent)
 
-        scheduleSleepTimerIfNeeded()
+        if (sleepTimerRemainingSeconds > 0L) {
+            startSleepTimerCountdown()
+        }
     }
 
     private fun pausePlayback() {
@@ -219,7 +232,8 @@ class SoundDetailActivity : AppCompatActivity() {
         }
         startService(intent)
 
-        cancelSleepTimer()
+        // freeze countdown but DO NOT reset remaining time
+        cancelSleepTimerCountdown()
     }
 
     private fun showSleepTimerDialog() {
@@ -243,18 +257,18 @@ class SoundDetailActivity : AppCompatActivity() {
             getString(R.string.sleep_timer_custom)
         )
 
-        val currentIndex = when (sleepTimerDurationMs) {
-            15L * 60_000L -> 1
-            30L * 60_000L -> 2
-            45L * 60_000L -> 3
-            60L * 60_000L -> 4
-            90L * 60_000L -> 5
-            120L * 60_000L -> 6
-            180L * 60_000L -> 7
-            240L * 60_000L -> 8
-            360L * 60_000L -> 9
-            480L * 60_000L -> 10
-            720L * 60_000L -> 11
+        val currentIndex = when (sleepTimerRemainingSeconds) {
+            15L * 60L -> 1
+            30L * 60L -> 2
+            45L * 60L -> 3
+            60L * 60L -> 4
+            90L * 60L -> 5
+            120L * 60L -> 6
+            180L * 60L -> 7
+            240L * 60L -> 8
+            360L * 60L -> 9
+            480L * 60L -> 10
+            720L * 60L -> 11
             else -> 0
         }
 
@@ -280,9 +294,6 @@ class SoundDetailActivity : AppCompatActivity() {
             .show()
     }
 
-    /***
-     * Custom Timer dialog with Hours + Minutes pickers
-     */
     private fun showCustomSleepTimerDialog() {
 
         val layout = LinearLayout(this).apply {
@@ -308,26 +319,22 @@ class SoundDetailActivity : AppCompatActivity() {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             addView(hourPicker)
-            addView(
-                TextView(this@SoundDetailActivity).apply {
-                    text = getString(R.string.sleep_timer_hours)
-                    setPadding(0, 8, 0, 0)
-                    textSize = 14f
-                }
-            )
+            addView(TextView(this@SoundDetailActivity).apply {
+                text = getString(R.string.sleep_timer_hours)
+                textSize = 14f
+                setPadding(0, 8, 0, 0)
+            })
         }
 
         val minuteLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             addView(minutePicker)
-            addView(
-                TextView(this@SoundDetailActivity).apply {
-                    text = getString(R.string.sleep_timer_minutes)
-                    setPadding(0, 8, 0, 0)
-                    textSize = 14f
-                }
-            )
+            addView(TextView(this@SoundDetailActivity).apply {
+                text = getString(R.string.sleep_timer_minutes)
+                textSize = 14f
+                setPadding(0, 8, 0, 0)
+            })
         }
 
         layout.addView(hourLayout)
@@ -348,81 +355,49 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun applySleepTimerSelection(minutes: Int) {
-        sleepTimerDurationMs = minutes.toLong() * 60_000L
+        val seconds = minutes.toLong() * 60L
+        sleepTimerRemainingSeconds = seconds
 
-        if (sleepTimerDurationMs > 0L) {
-
-            val totalSeconds = minutes * 60
-            val hours = totalSeconds / 3600
-            val mins = (totalSeconds % 3600) / 60
-            val secs = totalSeconds % 60
-
+        if (seconds > 0L) {
+            val hours = seconds / 3600
+            val mins = (seconds % 3600) / 60
+            val secs = seconds % 60
             sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, mins, secs)
 
-            if (isPlaying) scheduleSleepTimerIfNeeded()
+            if (isPlaying) startSleepTimerCountdown()
 
         } else {
-            cancelSleepTimer()
+            resetSleepTimer()
         }
-    }
-
-    private fun scheduleSleepTimerIfNeeded() {
-        sleepTimerRunnable?.let {
-            sleepTimerHandler.removeCallbacks(it)
-            sleepTimerRunnable = null
-        }
-
-        if (!isPlaying || sleepTimerDurationMs <= 0L) {
-            sleepTimerEndRealtime = 0L
-            cancelSleepTimerCountdown()
-            updateSleepTimerLabelForOffState()
-            return
-        }
-
-        sleepTimerEndRealtime = SystemClock.elapsedRealtime() + sleepTimerDurationMs
-
-        val runnable = Runnable {
-            if (isPlaying) pausePlayback() else cancelSleepTimer()
-        }
-
-        sleepTimerRunnable = runnable
-        sleepTimerHandler.postDelayed(runnable, sleepTimerDurationMs)
-
-        startSleepTimerCountdown()
-    }
-
-    private fun cancelSleepTimer() {
-        sleepTimerRunnable?.let {
-            sleepTimerHandler.removeCallbacks(it)
-            sleepTimerRunnable = null
-        }
-        sleepTimerEndRealtime = 0L
-        cancelSleepTimerCountdown()
-        updateSleepTimerLabelForOffState()
     }
 
     private fun startSleepTimerCountdown() {
         cancelSleepTimerCountdown()
 
-        if (sleepTimerDurationMs <= 0L || sleepTimerEndRealtime <= 0L) {
-            updateSleepTimerLabelForOffState()
+        if (!isPlaying || sleepTimerRemainingSeconds <= 0L) {
             return
         }
 
         val runnable = object : Runnable {
             override fun run() {
-                val remaining = sleepTimerEndRealtime - SystemClock.elapsedRealtime()
-                if (remaining <= 0L || !isPlaying) {
-                    cancelSleepTimer()
+                if (!isPlaying || sleepTimerRemainingSeconds <= 0L) {
                     return
                 }
 
-                val totalSeconds = remaining / 1000
-                val hours = totalSeconds / 3600
-                val minutes = (totalSeconds % 3600) / 60
-                val seconds = totalSeconds % 60
+                sleepTimerRemainingSeconds--
 
-                sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                if (sleepTimerRemainingSeconds <= 0L) {
+                    // timer expired
+                    pausePlayback()
+                    resetSleepTimer()
+                    return
+                }
+
+                val hrs = sleepTimerRemainingSeconds / 3600
+                val mins = (sleepTimerRemainingSeconds % 3600) / 60
+                val secs = sleepTimerRemainingSeconds % 60
+
+                sleepTimerLabel.text = String.format("%02d:%02d:%02d", hrs, mins, secs)
 
                 sleepTimerHandler.postDelayed(this, 1000L)
             }
@@ -439,7 +414,9 @@ class SoundDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateSleepTimerLabelForOffState() {
+    private fun resetSleepTimer() {
+        sleepTimerRemainingSeconds = 0L
+        cancelSleepTimerCountdown()
         sleepTimerLabel.text = getString(R.string.sleep_timer_button_label)
     }
 
@@ -471,7 +448,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        cancelSleepTimer()
+        resetSleepTimer()
     }
 
     companion object {
