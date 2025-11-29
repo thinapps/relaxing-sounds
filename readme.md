@@ -2,6 +2,13 @@
 
 ## Changelog
 
+### 0.4.22
+- improved sleep timer logic so pausing the sound now freezes the countdown instead of resetting it
+- resuming playback now continues the existing timer from the remaining time
+- pressing the back button resets the timer as expected
+- timer expiration now pauses playback and fully resets the timer display
+- refined countdown engine to store remaining seconds for accurate pausing and resuming
+
 ### 0.4.21
 - custom sleep timer now uses a two-column layout with clear Hours and Minutes labels
 - custom number pickers are evenly spaced and centered for a cleaner modal appearance
