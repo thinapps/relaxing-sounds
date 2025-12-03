@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
@@ -39,20 +38,16 @@ class SoundDetailActivity : AppCompatActivity() {
     private val sleepTimerHandler = Handler(Looper.getMainLooper())
     private var sleepTimerCountdownRunnable: Runnable? = null
 
-    // T2 MODEL — store remaining seconds, not endRealtime
+    // remaining seconds only, zero-drift model
     private var sleepTimerRemainingSeconds: Long = 0L
 
     private var playbackStateReceiverRegistered: Boolean = false
     private val playbackStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action != SoundPlaybackService.ACTION_PLAYBACK_STATE) {
-                return
-            }
+            if (intent?.action != SoundPlaybackService.ACTION_PLAYBACK_STATE) return
 
             val key = intent.getStringExtra(SoundPlaybackService.EXTRA_CURRENT_SOUND_KEY)
-            if (key == null || key != soundKey) {
-                return
-            }
+            if (key == null || key != soundKey) return
 
             val playing = intent.getBooleanExtra(
                 SoundPlaybackService.EXTRA_IS_PLAYING,
@@ -65,16 +60,15 @@ class SoundDetailActivity : AppCompatActivity() {
                 playPauseButton.setImageResource(R.drawable.ic_pause)
                 playPauseButton.contentDescription =
                     getString(R.string.sound_pause_label)
+
+                if (sleepTimerRemainingSeconds > 0L) {
+                    startSleepTimerCountdown()
+                }
             } else {
                 playPauseButton.setImageResource(R.drawable.ic_play)
                 playPauseButton.contentDescription =
                     getString(R.string.sound_play_label)
-            }
 
-            // resume countdown when playback resumes
-            if (isPlaying && sleepTimerRemainingSeconds > 0L) {
-                startSleepTimerCountdown()
-            } else {
                 cancelSleepTimerCountdown()
             }
         }
@@ -112,7 +106,7 @@ class SoundDetailActivity : AppCompatActivity() {
         )
 
         toolbar.setNavigationOnClickListener {
-            stopPlaybackAndFinish()
+            finish() // timer reset now handled in onStop()
         }
 
         playPauseButton.setOnClickListener {
@@ -150,8 +144,6 @@ class SoundDetailActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         requestPlaybackStateSync()
-
-        // resume UI countdown only, not actual timer logic
         if (isPlaying && sleepTimerRemainingSeconds > 0L) {
             startSleepTimerCountdown()
         }
@@ -160,21 +152,15 @@ class SoundDetailActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         unregisterPlaybackStateReceiver()
+
+        // reset timer ONLY when permanently leaving screen (no flicker)
+        if (isFinishing) {
+            resetSleepTimer()
+        }
     }
 
     override fun onBackPressed() {
-        stopPlaybackAndFinish()
-    }
-
-    private fun stopPlaybackAndFinish() {
-        val intent = Intent(this, SoundPlaybackService::class.java).apply {
-            action = SoundPlaybackService.ACTION_PAUSE
-        }
-        startService(intent)
-
-        isPlaying = false
-        resetSleepTimer()
-        finish()
+        finish() // timer reset handled in onStop()
     }
 
     private fun setupUiForSound(key: String) {
@@ -232,7 +218,7 @@ class SoundDetailActivity : AppCompatActivity() {
         }
         startService(intent)
 
-        // freeze countdown but DO NOT reset remaining time
+        // freeze without drift
         cancelSleepTimerCountdown()
     }
 
@@ -295,7 +281,6 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun showCustomSleepTimerDialog() {
-
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             setPadding(40, 10, 40, 10)
@@ -359,10 +344,11 @@ class SoundDetailActivity : AppCompatActivity() {
         sleepTimerRemainingSeconds = seconds
 
         if (seconds > 0L) {
-            val hours = seconds / 3600
+            val hrs = seconds / 3600
             val mins = (seconds % 3600) / 60
             val secs = seconds % 60
-            sleepTimerLabel.text = String.format("%02d:%02d:%02d", hours, mins, secs)
+
+            sleepTimerLabel.text = String.format("%02d:%02d:%02d", hrs, mins, secs)
 
             if (isPlaying) startSleepTimerCountdown()
 
@@ -374,20 +360,15 @@ class SoundDetailActivity : AppCompatActivity() {
     private fun startSleepTimerCountdown() {
         cancelSleepTimerCountdown()
 
-        if (!isPlaying || sleepTimerRemainingSeconds <= 0L) {
-            return
-        }
+        if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
 
         val runnable = object : Runnable {
             override fun run() {
-                if (!isPlaying || sleepTimerRemainingSeconds <= 0L) {
-                    return
-                }
+                if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
 
                 sleepTimerRemainingSeconds--
 
                 if (sleepTimerRemainingSeconds <= 0L) {
-                    // timer expired
                     pausePlayback()
                     resetSleepTimer()
                     return
@@ -448,6 +429,7 @@ class SoundDetailActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // final cleanup — harmless because real reset happens in onStop()
         resetSleepTimer()
     }
 
