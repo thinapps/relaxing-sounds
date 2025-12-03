@@ -68,6 +68,7 @@ class SoundPlaybackService : Service() {
         val soundKeyFromIntent = intent?.getStringExtra(EXTRA_SOUND_KEY)
 
         when (action) {
+
             ACTION_PLAY -> {
                 val targetKey = soundKeyFromIntent ?: currentSoundKey
                 if (targetKey != null) {
@@ -75,9 +76,11 @@ class SoundPlaybackService : Service() {
                     startFadeIn()
                 }
             }
+
             ACTION_PAUSE -> {
                 pauseWithFade()
             }
+
             ACTION_TOGGLE -> {
                 if (isPlaying) {
                     pauseWithFade()
@@ -89,24 +92,23 @@ class SoundPlaybackService : Service() {
                     }
                 }
             }
+
             ACTION_STOP -> {
                 stopPlaybackAndSelf()
             }
+
             ACTION_SET_SOUND -> {
                 if (soundKeyFromIntent != null) {
                     preparePlayerIfNeeded(soundKeyFromIntent)
-                    if (isPlaying) {
-                        startFadeIn()
-                    } else {
-                        updateNotification(false)
-                    }
+                    if (isPlaying) startFadeIn() else updateNotification(false)
                 }
             }
+
             ACTION_DISMISS -> {
                 stopPlaybackAndSelf()
             }
+
             ACTION_REQUEST_STATE -> {
-                // respond to explicit state requests from SoundDetailActivity
                 broadcastPlaybackState(isPlaying, currentSoundKey)
             }
         }
@@ -114,16 +116,17 @@ class SoundPlaybackService : Service() {
         return START_NOT_STICKY
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
         super.onDestroy()
+
         fadeAnimator?.cancel()
         fadeAnimator = null
+
         mediaPlayer?.release()
         mediaPlayer = null
+
         isPlaying = false
         currentSoundKey = null
 
@@ -138,20 +141,14 @@ class SoundPlaybackService : Service() {
             return
         }
 
-        // stop any ongoing fades before touching the player
         fadeAnimator?.cancel()
         fadeAnimator = null
 
         mediaPlayer?.let { player ->
-            try {
-                if (player.isPlaying) {
-                    player.stop()
-                }
-            } catch (e: IllegalStateException) {
-                // ignore; player may already be in a terminal state
-            }
+            try { if (player.isPlaying) player.stop() } catch (_: IllegalStateException) {}
             player.release()
         }
+
         mediaPlayer = null
 
         val resId = when (soundKey) {
@@ -183,15 +180,17 @@ class SoundPlaybackService : Service() {
         fadeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = FADE_DURATION_MS
             interpolator = AccelerateDecelerateInterpolator()
+
             addUpdateListener { animator ->
                 val v = animator.animatedValue as Float
                 player.setVolume(v, v)
             }
+
             addListener(object : AnimatorListenerAdapter() {
+
                 override fun onAnimationStart(animation: Animator) {
-                    if (!player.isPlaying) {
-                        player.start()
-                    }
+                    if (!player.isPlaying) player.start()
+
                     startForeground(
                         NotificationHelper.NOTIFICATION_ID,
                         NotificationHelper.buildPlaybackNotification(
@@ -201,6 +200,8 @@ class SoundPlaybackService : Service() {
                             mediaSession.sessionToken
                         )
                     )
+
+                    // Immediate broadcast (fixes timer desync)
                     broadcastPlaybackState(true, currentSoundKey)
                 }
 
@@ -208,6 +209,7 @@ class SoundPlaybackService : Service() {
                     updateNotification(true)
                 }
             })
+
             start()
         }
     }
@@ -222,24 +224,27 @@ class SoundPlaybackService : Service() {
             playbackState.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1f).build()
         )
 
-        // broadcast paused state immediately so UI can update play/pause icon with no delay
+        // Broadcast BEFORE fade to keep UI in sync
         broadcastPlaybackState(false, currentSoundKey)
 
         fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             duration = FADE_DURATION_MS
             interpolator = AccelerateDecelerateInterpolator()
+
             addUpdateListener { animator ->
                 val v = animator.animatedValue as Float
                 player.setVolume(v, v)
             }
+
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    player.pause()
+                    try { player.pause() } catch (_: IllegalStateException) {}
+
                     stopForeground(false)
                     updateNotification(false)
-                    // no need to broadcast here anymore; already broadcast at pause start
                 }
             })
+
             start()
         }
     }
@@ -256,20 +261,16 @@ class SoundPlaybackService : Service() {
         val previousKey = currentSoundKey
 
         mediaPlayer?.let { player ->
-            try {
-                if (player.isPlaying) {
-                    player.stop()
-                }
-            } catch (e: IllegalStateException) {
-                // ignore
-            }
+            try { if (player.isPlaying) player.stop() } catch (_: IllegalStateException) {}
             player.release()
         }
+
         mediaPlayer = null
         currentSoundKey = null
 
         stopForeground(true)
         NotificationManagerCompat.from(this).cancel(NotificationHelper.NOTIFICATION_ID)
+
         broadcastPlaybackState(false, previousKey)
         stopSelf()
     }
@@ -281,6 +282,7 @@ class SoundPlaybackService : Service() {
             currentSoundKey,
             mediaSession.sessionToken
         )
+
         NotificationManagerCompat.from(this).notify(
             NotificationHelper.NOTIFICATION_ID,
             notification
