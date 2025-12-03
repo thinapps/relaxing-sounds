@@ -2,6 +2,13 @@
 
 ## Changelog
 
+### 0.4.23
+- fixed sleep timer drift that caused one or two seconds to be lost each time playback was paused and resumed
+- improved sleep timer accuracy by switching to a zero-drift countdown model using exact remaining seconds
+- prevented timer flicker when leaving the sound detail screen by resetting the timer only after the activity finishes
+- refined pause and resume behavior so UI and playback state always stay synchronized with smooth fade transitions
+- improved internal fade-in and fade-out handling in the playback service for more reliable volume changes and fewer edge cases
+
 ### 0.4.22
 - improved sleep timer logic so pausing the sound now freezes the countdown instead of resetting it
 - resuming playback now continues the existing timer from the remaining time
