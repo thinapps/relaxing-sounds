@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.24
+- fixed the sleep timer losing seconds during pause by freezing the countdown instantly on button press for true zero-drift behavior
+
 ### 0.4.23
 - fixed sleep timer drift that caused one or two seconds to be lost each time playback was paused and resumed
 - improved sleep timer accuracy by switching to a zero-drift countdown model using exact remaining seconds
