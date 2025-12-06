@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.4.25
+- fixed remaining sleep timer drift by ensuring the countdown never restarts from service broadcasts and only resumes when the user explicitly presses play
+
 ### 0.4.24
 - fixed the sleep timer losing seconds during pause by freezing the countdown instantly on button press for true zero-drift behavior
 
