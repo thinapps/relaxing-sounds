@@ -2,6 +2,16 @@
 
 ## Changelog
 
+### 0.5.0
+- introduced a unified global debounce system to prevent rapid double-taps across the app
+- added ClickDebounce helper for consistent timing control and simpler reuse
+- updated main screen cards to use global debounce and improved navigation stability
+- added debounce and animation lockout to the play/pause button for smoother, more predictable interaction
+- ensured sleep timer button uses the same debounce protection for consistent behavior
+- reset debounce state on activity resume to avoid unintended blocking
+- simplified notification toggle behavior by removing inline debounce and letting the service handle state cleanly
+- verified playback service fade logic and notification updates remain conflict-free under the new input rules
+
 ## 0.4.27
 - added global debounce to prevent rapid double-taps on play/pause and sleep timer buttons  
 - blocked user input during play/pause icon animation to avoid overlapping commands  
