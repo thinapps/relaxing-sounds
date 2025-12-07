@@ -2,6 +2,12 @@
 
 ## Changelog
 
+## 0.4.27
+- added global debounce to prevent rapid double-taps on play/pause and sleep timer buttons  
+- blocked user input during play/pause icon animation to avoid overlapping commands  
+- improved UI responsiveness by resetting click state when the screen resumes  
+- added defensive timer validation to prevent negative countdown values  
+
 ### 0.4.26
 - restored correct back navigation behavior by pausing playback whenever the user leaves the sound detail screen
 - added a unified `exitAndPause()` method to ensure consistent pause handling across all exit paths
