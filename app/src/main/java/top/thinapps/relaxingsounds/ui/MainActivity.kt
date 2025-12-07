@@ -11,15 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import top.thinapps.relaxingsounds.R
+import top.thinapps.relaxingsounds.core.ClickDebounce
 
 class MainActivity : AppCompatActivity() {
 
     private val requestNotificationsPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { _: Boolean ->
-            // no-op: playback service will automatically show notifications once permission is granted
+            // no-op: playback notifications will appear once permission is granted
         }
-
-    private var isNavigatingToDetail = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        isNavigatingToDetail = false
+        ClickDebounce.reset()
     }
 
     private fun ensureNotificationPermission() {
@@ -66,19 +65,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun MaterialCardView.setRelaxingClick(soundKey: String) {
         setOnClickListener {
-            if (isNavigatingToDetail) {
-                return@setOnClickListener
-            }
-            isNavigatingToDetail = true
+            // global debounce to prevent rapid taps
+            if (!ClickDebounce.allowClick()) return@setOnClickListener
 
-            // gentle press in (faster)
+            // play animation before launching detail screen
             this.animate()
                 .scaleX(0.98f)
                 .scaleY(0.98f)
                 .setDuration(90)
                 .setInterpolator(AccelerateDecelerateInterpolator())
                 .withEndAction {
-                    // gentle release, then open screen (faster)
                     this.animate()
                         .scaleX(1f)
                         .scaleY(1f)
