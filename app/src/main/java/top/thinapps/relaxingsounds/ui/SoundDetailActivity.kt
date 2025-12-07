@@ -21,7 +21,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
-import top.thinapps.relaxingsounds.util.ClickDebounce
+import top.thinapps.relaxingsounds.core.ClickDebounce
 
 class SoundDetailActivity : AppCompatActivity() {
 
