@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.4.26
+- restored correct back navigation behavior by pausing playback whenever the user leaves the sound detail screen
+- added a unified `exitAndPause()` method to ensure consistent pause handling across all exit paths
+- replaced direct `finish()` calls with `exitAndPause()` to prevent playback from continuing unexpectedly
+
 ### 0.4.25
 - fixed remaining sleep timer drift by ensuring the countdown never restarts from service broadcasts and only resumes when the user explicitly presses play
 
