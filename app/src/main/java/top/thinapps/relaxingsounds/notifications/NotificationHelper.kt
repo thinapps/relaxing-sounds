@@ -13,6 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 import top.thinapps.relaxingsounds.ui.SoundDetailActivity
+import top.thinapps.relaxingsounds.core.ClickDebounce
 
 object NotificationHelper {
 
@@ -21,17 +22,14 @@ object NotificationHelper {
 
     fun createChannelIfNeeded(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            val existing = manager.getNotificationChannel(CHANNEL_ID)
-            if (existing == null) {
+            val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (mgr.getNotificationChannel(CHANNEL_ID) == null) {
                 val channel = NotificationChannel(
                     CHANNEL_ID,
                     context.getString(R.string.notification_channel_playback),
                     NotificationManager.IMPORTANCE_LOW
                 )
-                manager.createNotificationChannel(channel)
+                mgr.createNotificationChannel(channel)
             }
         }
     }
@@ -42,6 +40,7 @@ object NotificationHelper {
         soundKey: String?,
         sessionToken: MediaSessionCompat.Token
     ): Notification {
+
         val title = getSoundTitle(context, soundKey)
         val statusText = if (isPlaying) {
             context.getString(R.string.notification_status_playing)
@@ -49,24 +48,22 @@ object NotificationHelper {
             context.getString(R.string.notification_status_paused)
         }
 
-        // clean contentIntent that opens app WITHOUT toggling playback
-        val safeContentIntent = PendingIntent.getActivity(
+        val contentIntent = PendingIntent.getActivity(
             context,
             991,
             Intent(context, SoundDetailActivity::class.java).apply {
                 putExtra(SoundDetailActivity.EXTRA_SOUND_KEY, soundKey)
-                putExtra(
-                    SoundDetailActivity.EXTRA_LAUNCH_SOURCE,
-                    SoundDetailActivity.SOURCE_NOTIFICATION
-                )
+                putExtra(SoundDetailActivity.EXTRA_LAUNCH_SOURCE, SoundDetailActivity.SOURCE_NOTIFICATION)
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        // debounce: ignore rapid toggle presses
         val toggleIntent = Intent(context, SoundPlaybackService::class.java).apply {
             action = SoundPlaybackService.ACTION_TOGGLE
             putExtra(SoundPlaybackService.EXTRA_SOUND_KEY, soundKey)
         }
+
         val togglePendingIntent = PendingIntent.getService(
             context,
             1,
@@ -74,38 +71,42 @@ object NotificationHelper {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val dismissIntent = Intent(context, SoundPlaybackService::class.java).apply {
-            action = SoundPlaybackService.ACTION_DISMISS
-        }
+        val toggleAction = NotificationCompat.Action(
+            if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play,
+            if (isPlaying)
+                context.getString(R.string.notification_action_pause)
+            else
+                context.getString(R.string.notification_action_play),
+            // enforce debounce here
+            PendingIntent.getService(
+                context,
+                1,
+                Intent(context, SoundPlaybackService::class.java).apply {
+                    if (ClickDebounce.allowClick()) {
+                        action = SoundPlaybackService.ACTION_TOGGLE
+                        putExtra(SoundPlaybackService.EXTRA_SOUND_KEY, soundKey)
+                    } else {
+                        action = "no_op"
+                    }
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        )
+
         val dismissPendingIntent = PendingIntent.getService(
             context,
             2,
-            dismissIntent,
+            Intent(context, SoundPlaybackService::class.java).apply {
+                action = SoundPlaybackService.ACTION_DISMISS
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val toggleActionIcon = if (isPlaying) {
-            R.drawable.ic_pause
-        } else {
-            R.drawable.ic_play
-        }
-        val toggleActionTitle = if (isPlaying) {
-            context.getString(R.string.notification_action_pause)
-        } else {
-            context.getString(R.string.notification_action_play)
-        }
-
-        val toggleAction = NotificationCompat.Action(
-            toggleActionIcon,
-            toggleActionTitle,
-            togglePendingIntent
         )
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_small)
             .setContentTitle(title)
             .setContentText(statusText)
-            .setContentIntent(safeContentIntent)
+            .setContentIntent(contentIntent)
             .setDeleteIntent(dismissPendingIntent)
             .setOngoing(isPlaying)
             .setOnlyAlertOnce(true)
