@@ -13,6 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.notifications.NotificationHelper
+import top.thinapps.relaxingsounds.util.ClickDebounce
 
 class SoundPlaybackService : Service() {
 
@@ -31,15 +32,15 @@ class SoundPlaybackService : Service() {
         mediaSession = MediaSessionCompat(this, "RelaxingSounds").apply {
             setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
             )
             isActive = true
         }
 
         playbackState = PlaybackStateCompat.Builder().setActions(
             PlaybackStateCompat.ACTION_PLAY or
-                PlaybackStateCompat.ACTION_PAUSE or
-                PlaybackStateCompat.ACTION_STOP
+                    PlaybackStateCompat.ACTION_PAUSE or
+                    PlaybackStateCompat.ACTION_STOP
         )
 
         mediaSession.setPlaybackState(
@@ -82,6 +83,12 @@ class SoundPlaybackService : Service() {
             }
 
             ACTION_TOGGLE -> {
+
+                // debounce for rapid user taps from notification
+                if (!ClickDebounce.allowClick()) {
+                    return START_NOT_STICKY
+                }
+
                 if (isPlaying) {
                     pauseWithFade()
                 } else {
@@ -100,7 +107,11 @@ class SoundPlaybackService : Service() {
             ACTION_SET_SOUND -> {
                 if (soundKeyFromIntent != null) {
                     preparePlayerIfNeeded(soundKeyFromIntent)
-                    if (isPlaying) startFadeIn() else updateNotification(false)
+                    if (isPlaying) {
+                        startFadeIn()
+                    } else {
+                        updateNotification(false)
+                    }
                 }
             }
 
@@ -201,7 +212,6 @@ class SoundPlaybackService : Service() {
                         )
                     )
 
-                    // Immediate broadcast (fixes timer desync)
                     broadcastPlaybackState(true, currentSoundKey)
                 }
 
@@ -224,7 +234,6 @@ class SoundPlaybackService : Service() {
             playbackState.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1f).build()
         )
 
-        // Broadcast BEFORE fade to keep UI in sync
         broadcastPlaybackState(false, currentSoundKey)
 
         fadeAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
