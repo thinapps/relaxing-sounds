@@ -12,7 +12,7 @@
 - simplified notification toggle behavior by removing inline debounce and letting the service handle state cleanly
 - verified playback service fade logic and notification updates remain conflict-free under the new input rules
 
-## 0.4.27
+### 0.4.27
 - added global debounce to prevent rapid double-taps on play/pause and sleep timer buttons  
 - blocked user input during play/pause icon animation to avoid overlapping commands  
 - improved UI responsiveness by resetting click state when the screen resumes  
