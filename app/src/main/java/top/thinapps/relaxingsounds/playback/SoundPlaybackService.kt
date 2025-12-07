@@ -13,7 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.notifications.NotificationHelper
-import top.thinapps.relaxingsounds.util.ClickDebounce
+import top.thinapps.relaxingsounds.core.ClickDebounce
 
 class SoundPlaybackService : Service() {
 
