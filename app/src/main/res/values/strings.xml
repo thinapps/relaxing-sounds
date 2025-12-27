@@ -18,6 +18,10 @@
     <string name="sound_brown_title">Brown Noise</string>
     <string name="sound_brown_subtitle">Deep, warm background noise</string>
 
+    <!-- waterfall -->
+    <string name="sound_waterfall_title">Waterfall</string>
+    <string name="sound_waterfall_subtitle">Deep continuous cascade</string>
+
     <!-- playback controls -->
     <string name="sound_play_label">Play</string>
     <string name="sound_pause_label">Pause</string>
