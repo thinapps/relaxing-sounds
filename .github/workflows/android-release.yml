@@ -15,6 +15,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Checkout relaxing sounds audio
+        uses: actions/checkout@v4
+        with:
+          repository: thinapps/relaxing-sounds-audio
+          token: ${{ secrets.AUDIO_REPO_TOKEN }}
+          path: audio
+
+      - name: Copy audio files
+        run: |
+          mkdir -p app/src/main/res/raw
+          cp audio/*.mp3 app/src/main/res/raw/
+
       - name: Write Gradle signing properties
         run: |
           set -euo pipefail
@@ -99,4 +111,3 @@ jobs:
         with:
           name: app-release
           path: app/build/outputs/bundle/release/app-release.aab
-          
