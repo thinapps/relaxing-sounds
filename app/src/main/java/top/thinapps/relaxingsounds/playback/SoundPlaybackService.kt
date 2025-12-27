@@ -319,6 +319,7 @@ class SoundPlaybackService : Service() {
         const val SOUND_OCEAN = "ocean"
         const val SOUND_RAIN = "rain"
         const val SOUND_BROWN = "brown"
+        const val SOUND_WATERFALL = "waterfall"
 
         const val ACTION_PLAYBACK_STATE =
             "top.thinapps.relaxingsounds.action.PLAYBACK_STATE"
