@@ -160,6 +160,47 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- waterfall card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_waterfall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp"
+                app:rippleColor="@color/rs_color_ripple"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/text_waterfall_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sound_waterfall_title"
+                        android:textColor="@color/rs_color_on_background"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_waterfall_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/sound_waterfall_subtitle"
+                        android:textColor="@color/rs_color_on_background"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- brown noise card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_brown_noise"
