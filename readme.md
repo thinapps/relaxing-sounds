@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.6.1
+- added `waterfall.mp3` sound and related UI/playback support
+
 ### 0.6.0
 - moved bundled audio files out of the public repository
 - audio assets are now injected at build time from a private repository
