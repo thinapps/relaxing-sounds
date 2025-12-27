@@ -454,5 +454,7 @@ class SoundDetailActivity : AppCompatActivity() {
         const val SOUND_OCEAN = "ocean"
         const val SOUND_RAIN = "rain"
         const val SOUND_BROWN = "brown"
+        const val SOUND_WATERFALL = "waterfall"
+
     }
 }
