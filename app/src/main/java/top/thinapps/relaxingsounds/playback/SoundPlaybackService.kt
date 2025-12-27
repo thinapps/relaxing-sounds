@@ -166,6 +166,7 @@ class SoundPlaybackService : Service() {
             SOUND_OCEAN -> R.raw.ocean_waves
             SOUND_RAIN -> R.raw.rain
             SOUND_BROWN -> R.raw.brown_noise
+            SOUND_WATERFALL -> R.raw.waterfall
             else -> R.raw.ocean_waves
         }
 
