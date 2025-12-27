@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.6.0
+- moved bundled audio files out of the public repository
+- audio assets are now injected at build time from a private repository
+- prepares for future licensed audio that cannot be redistributed
+
 ### 0.5.0
 - introduced a unified global debounce system to prevent rapid double-taps across the app
 - added ClickDebounce helper for consistent timing control and simpler reuse
