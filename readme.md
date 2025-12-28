@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.6.2
+- fixed missing home screen click wiring for waterfall sound
+
 ### 0.6.1
 - added `waterfall.mp3` sound and related UI/playback support
 
