@@ -14,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.notifications.NotificationHelper
 import top.thinapps.relaxingsounds.core.ClickDebounce
+import top.thinapps.relaxingsounds.core.SoundCatalog
 
 class SoundPlaybackService : Service() {
 
@@ -162,13 +163,8 @@ class SoundPlaybackService : Service() {
 
         mediaPlayer = null
 
-        val resId = when (soundKey) {
-            SOUND_OCEAN -> R.raw.ocean_waves
-            SOUND_RAIN -> R.raw.rain
-            SOUND_BROWN -> R.raw.brown_noise
-            SOUND_WATERFALL -> R.raw.waterfall
-            else -> R.raw.ocean_waves
-        }
+        val sound = SoundCatalog.getByKey(soundKey) ?: return
+        val resId = sound.rawResId
 
         val player = MediaPlayer.create(this, resId)?.apply {
             isLooping = true
@@ -316,11 +312,6 @@ class SoundPlaybackService : Service() {
         const val ACTION_DISMISS = "top.thinapps.relaxingsounds.action.DISMISS"
 
         const val EXTRA_SOUND_KEY = "extra_sound_key"
-
-        const val SOUND_OCEAN = "ocean"
-        const val SOUND_RAIN = "rain"
-        const val SOUND_BROWN = "brown"
-        const val SOUND_WATERFALL = "waterfall"
 
         const val ACTION_PLAYBACK_STATE =
             "top.thinapps.relaxingsounds.action.PLAYBACK_STATE"
