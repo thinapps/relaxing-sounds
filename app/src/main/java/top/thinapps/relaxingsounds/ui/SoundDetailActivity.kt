@@ -186,15 +186,8 @@ class SoundDetailActivity : AppCompatActivity() {
         soundTitle.setText(sound.titleResId)
         soundDescription.setText(sound.subtitleResId)
 
-        val backgroundRes = when (sound.key) {
-            "ocean" -> R.drawable.bg_sound_ocean
-            "rain" -> R.drawable.bg_sound_rain
-            "brown" -> R.drawable.bg_sound_brown
-            else -> R.drawable.bg_sound_ocean
-        }
-
         findViewById<View>(R.id.soundBackground)
-            .setBackgroundResource(backgroundRes)
+            .setBackgroundResource(sound.backgroundResId)
     }
 
     private fun startPlayback(initial: Boolean) {
@@ -223,16 +216,12 @@ class SoundDetailActivity : AppCompatActivity() {
     }
 
     private fun registerPlaybackStateReceiver() {
-        if (avoidDoubleRegister()) return
+        if (playbackStateReceiverRegistered) return
         registerReceiver(
             playbackStateReceiver,
             IntentFilter(SoundPlaybackService.ACTION_PLAYBACK_STATE)
         )
         playbackStateReceiverRegistered = true
-    }
-
-    private fun avoidDoubleRegister(): Boolean {
-        return playbackStateReceiverRegistered
     }
 
     private fun unregisterPlaybackStateReceiver() {
