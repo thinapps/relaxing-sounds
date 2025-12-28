@@ -23,6 +23,7 @@ import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 import top.thinapps.relaxingsounds.core.ClickDebounce
 import top.thinapps.relaxingsounds.core.SoundCatalog
+import top.thinapps.relaxingsounds.core.SoundItem
 
 class SoundDetailActivity : AppCompatActivity() {
 
@@ -86,7 +87,6 @@ class SoundDetailActivity : AppCompatActivity() {
             ?: SoundCatalog.sounds.first().key
 
         val sound = SoundCatalog.getByKey(soundKey) ?: return
-
         setupUiForSound(sound)
 
         val launchSource = intent.getStringExtra(EXTRA_LAUNCH_SOURCE)
@@ -182,7 +182,7 @@ class SoundDetailActivity : AppCompatActivity() {
             .start()
     }
 
-    private fun setupUiForSound(sound: SoundCatalog.SoundItem) {
+    private fun setupUiForSound(sound: SoundItem) {
         soundTitle.setText(sound.titleResId)
         soundDescription.setText(sound.subtitleResId)
 
@@ -213,6 +213,185 @@ class SoundDetailActivity : AppCompatActivity() {
         startService(intent)
 
         cancelSleepTimerCountdown()
+    }
+
+    /* ===== sleep timer logic (unchanged) ===== */
+
+    private fun showSleepTimerDialog() {
+        val optionMinutes = intArrayOf(
+            0, 15, 30, 45, 60, 90, 120, 180, 240, 360, 480, 720, -1
+        )
+
+        val labels = arrayOf(
+            getString(R.string.sleep_timer_off),
+            getString(R.string.sleep_timer_15),
+            getString(R.string.sleep_timer_30),
+            getString(R.string.sleep_timer_45),
+            getString(R.string.sleep_timer_60),
+            getString(R.string.sleep_timer_90),
+            getString(R.string.sleep_timer_120),
+            getString(R.string.sleep_timer_180),
+            getString(R.string.sleep_timer_240),
+            getString(R.string.sleep_timer_360),
+            getString(R.string.sleep_timer_480),
+            getString(R.string.sleep_timer_720),
+            getString(R.string.sleep_timer_custom)
+        )
+
+        val currentIndex = when (sleepTimerRemainingSeconds) {
+            15L * 60L -> 1
+            30L * 60L -> 2
+            45L * 60L -> 3
+            60L * 60L -> 4
+            90L * 60L -> 5
+            120L * 60L -> 6
+            180L * 60L -> 7
+            240L * 60L -> 8
+            360L * 60L -> 9
+            480L * 60L -> 10
+            720L * 60L -> 11
+            else -> 0
+        }
+
+        var selectedIndex = currentIndex
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.sleep_timer_title)
+            .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
+                selectedIndex = which
+                if (which == labels.lastIndex) {
+                    dialog.dismiss()
+                    showCustomSleepTimerDialog()
+                }
+            }
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                if (selectedIndex != labels.lastIndex) {
+                    applySleepTimerSelection(optionMinutes[selectedIndex])
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showCustomSleepTimerDialog() {
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(40, 10, 40, 10)
+        }
+
+        val hourPicker = NumberPicker(this).apply {
+            minValue = 0
+            maxValue = 12
+            value = 0
+            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        }
+
+        val minutePicker = NumberPicker(this).apply {
+            minValue = 0
+            maxValue = 59
+            value = 30
+            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        }
+
+        val hourLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            addView(hourPicker)
+            addView(TextView(this@SoundDetailActivity).apply {
+                text = getString(R.string.sleep_timer_hours)
+                textSize = 14f
+                setPadding(0, 8, 0, 0)
+            })
+        }
+
+        val minuteLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            addView(minutePicker)
+            addView(TextView(this@SoundDetailActivity).apply {
+                text = getString(R.string.sleep_timer_minutes)
+                textSize = 14f
+                setPadding(0, 8, 0, 0)
+            })
+        }
+
+        layout.addView(hourLayout)
+        layout.addView(minuteLayout)
+
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
+            .setTitle(R.string.sleep_timer_custom)
+            .setView(layout)
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                val hours = hourPicker.value
+                val mins = minutePicker.value
+                applySleepTimerSelection((hours * 60) + mins)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun applySleepTimerSelection(minutes: Int) {
+        sleepTimerRemainingSeconds = minutes.toLong() * 60L
+        if (sleepTimerRemainingSeconds < 0L) sleepTimerRemainingSeconds = 0L
+
+        if (sleepTimerRemainingSeconds > 0L) {
+            val hrs = sleepTimerRemainingSeconds / 3600
+            val mins = (sleepTimerRemainingSeconds % 3600) / 60
+            val secs = sleepTimerRemainingSeconds % 60
+
+            sleepTimerLabel.text =
+                String.format("%02d:%02d:%02d", hrs, mins, secs)
+
+            if (isPlaying) startSleepTimerCountdown()
+        } else {
+            resetSleepTimer()
+        }
+    }
+
+    private fun startSleepTimerCountdown() {
+        cancelSleepTimerCountdown()
+        if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
+
+        val runnable = object : Runnable {
+            override fun run() {
+                if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
+
+                sleepTimerRemainingSeconds--
+
+                if (sleepTimerRemainingSeconds <= 0L) {
+                    pausePlayback()
+                    resetSleepTimer()
+                    return
+                }
+
+                val hrs = sleepTimerRemainingSeconds / 3600
+                val mins = (sleepTimerRemainingSeconds % 3600) / 60
+                val secs = sleepTimerRemainingSeconds % 60
+
+                sleepTimerLabel.text =
+                    String.format("%02d:%02d:%02d", hrs, mins, secs)
+
+                sleepTimerHandler.postDelayed(this, 1000L)
+            }
+        }
+
+        sleepTimerCountdownRunnable = runnable
+        sleepTimerHandler.post(runnable)
+    }
+
+    private fun cancelSleepTimerCountdown() {
+        sleepTimerCountdownRunnable?.let {
+            sleepTimerHandler.removeCallbacks(it)
+            sleepTimerCountdownRunnable = null
+        }
+    }
+
+    private fun resetSleepTimer() {
+        sleepTimerRemainingSeconds = 0L
+        cancelSleepTimerCountdown()
+        sleepTimerLabel.text = getString(R.string.sleep_timer_button_label)
     }
 
     private fun registerPlaybackStateReceiver() {
