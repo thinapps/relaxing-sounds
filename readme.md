@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 0.7.0
+- refactored sound configuration to a single SoundCatalog source of truth
+- removed hardcoded sound keys and mappings across UI, playback, and notifications
+- made home screen and sound detail screens data driven
+- updated playback service and notification handling to use SoundCatalog
+
 ### 0.6.2
 - fixed missing home screen click wiring for waterfall sound
 
