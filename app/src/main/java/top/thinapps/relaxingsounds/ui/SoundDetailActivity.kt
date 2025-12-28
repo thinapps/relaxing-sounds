@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 import top.thinapps.relaxingsounds.core.ClickDebounce
+import top.thinapps.relaxingsounds.core.SoundCatalog
 
 class SoundDetailActivity : AppCompatActivity() {
 
@@ -40,7 +41,6 @@ class SoundDetailActivity : AppCompatActivity() {
     private var sleepTimerCountdownRunnable: Runnable? = null
 
     private var sleepTimerRemainingSeconds: Long = 0L
-
     private var playbackStateReceiverRegistered: Boolean = false
 
     private val playbackStateReceiver = object : BroadcastReceiver() {
@@ -82,9 +82,12 @@ class SoundDetailActivity : AppCompatActivity() {
         sleepTimerButton = findViewById(R.id.sleepTimerContainer)
         sleepTimerLabel = findViewById(R.id.sleepTimerLabel)
 
-        soundKey = intent.getStringExtra(EXTRA_SOUND_KEY) ?: SOUND_OCEAN
+        soundKey = intent.getStringExtra(EXTRA_SOUND_KEY)
+            ?: SoundCatalog.sounds.first().key
 
-        setupUiForSound(soundKey)
+        val sound = SoundCatalog.getByKey(soundKey) ?: return
+
+        setupUiForSound(sound)
 
         val launchSource = intent.getStringExtra(EXTRA_LAUNCH_SOURCE)
         if (launchSource == SOURCE_MAIN) {
@@ -179,33 +182,19 @@ class SoundDetailActivity : AppCompatActivity() {
             .start()
     }
 
-    private fun setupUiForSound(key: String) {
-        val (titleRes, descriptionRes, backgroundRes) = when (key) {
-            SOUND_OCEAN -> Triple(
-                R.string.sound_ocean_title,
-                R.string.sound_ocean_subtitle,
-                R.drawable.bg_sound_ocean
-            )
-            SOUND_RAIN -> Triple(
-                R.string.sound_rain_title,
-                R.string.sound_rain_subtitle,
-                R.drawable.bg_sound_rain
-            )
-            SOUND_BROWN -> Triple(
-                R.string.sound_brown_title,
-                R.string.sound_brown_subtitle,
-                R.drawable.bg_sound_brown
-            )
-            else -> Triple(
-                R.string.sound_ocean_title,
-                R.string.sound_ocean_subtitle,
-                R.drawable.bg_sound_ocean
-            )
+    private fun setupUiForSound(sound: SoundCatalog.SoundItem) {
+        soundTitle.setText(sound.titleResId)
+        soundDescription.setText(sound.subtitleResId)
+
+        val backgroundRes = when (sound.key) {
+            "ocean" -> R.drawable.bg_sound_ocean
+            "rain" -> R.drawable.bg_sound_rain
+            "brown" -> R.drawable.bg_sound_brown
+            else -> R.drawable.bg_sound_ocean
         }
 
-        soundTitle.setText(titleRes)
-        soundDescription.setText(descriptionRes)
-        findViewById<View>(R.id.soundBackground).setBackgroundResource(backgroundRes)
+        findViewById<View>(R.id.soundBackground)
+            .setBackgroundResource(backgroundRes)
     }
 
     private fun startPlayback(initial: Boolean) {
@@ -233,191 +222,17 @@ class SoundDetailActivity : AppCompatActivity() {
         cancelSleepTimerCountdown()
     }
 
-    private fun showSleepTimerDialog() {
-        val optionMinutes = intArrayOf(
-            0, 15, 30, 45, 60, 90, 120, 180, 240, 360, 480, 720, -1
-        )
-
-        val labels = arrayOf(
-            getString(R.string.sleep_timer_off),
-            getString(R.string.sleep_timer_15),
-            getString(R.string.sleep_timer_30),
-            getString(R.string.sleep_timer_45),
-            getString(R.string.sleep_timer_60),
-            getString(R.string.sleep_timer_90),
-            getString(R.string.sleep_timer_120),
-            getString(R.string.sleep_timer_180),
-            getString(R.string.sleep_timer_240),
-            getString(R.string.sleep_timer_360),
-            getString(R.string.sleep_timer_480),
-            getString(R.string.sleep_timer_720),
-            getString(R.string.sleep_timer_custom)
-        )
-
-        val currentIndex = when (sleepTimerRemainingSeconds) {
-            15L * 60L -> 1
-            30L * 60L -> 2
-            45L * 60L -> 3
-            60L * 60L -> 4
-            90L * 60L -> 5
-            120L * 60L -> 6
-            180L * 60L -> 7
-            240L * 60L -> 8
-            360L * 60L -> 9
-            480L * 60L -> 10
-            720L * 60L -> 11
-            else -> 0
-        }
-
-        var selectedIndex = currentIndex
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.sleep_timer_title)
-            .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
-                selectedIndex = which
-                if (which == labels.lastIndex) {
-                    dialog.dismiss()
-                    showCustomSleepTimerDialog()
-                }
-            }
-            .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                if (selectedIndex != labels.lastIndex) {
-                    applySleepTimerSelection(optionMinutes[selectedIndex])
-                }
-                dialog.dismiss()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun showCustomSleepTimerDialog() {
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(40, 10, 40, 10)
-        }
-
-        val hourPicker = NumberPicker(this).apply {
-            minValue = 0
-            maxValue = 12
-            value = 0
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-        }
-
-        val minutePicker = NumberPicker(this).apply {
-            minValue = 0
-            maxValue = 59
-            value = 30
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-        }
-
-        val hourLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            addView(hourPicker)
-            addView(TextView(this@SoundDetailActivity).apply {
-                text = getString(R.string.sleep_timer_hours)
-                textSize = 14f
-                setPadding(0, 8, 0, 0)
-            })
-        }
-
-        val minuteLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            addView(minutePicker)
-            addView(TextView(this@SoundDetailActivity).apply {
-                text = getString(R.string.sleep_timer_minutes)
-                textSize = 14f
-                setPadding(0, 8, 0, 0)
-            })
-        }
-
-        layout.addView(hourLayout)
-        layout.addView(minuteLayout)
-
-        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_RelaxingSounds_AlertDialog)
-            .setTitle(R.string.sleep_timer_custom)
-            .setView(layout)
-            .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                val hours = hourPicker.value
-                val mins = minutePicker.value
-                applySleepTimerSelection((hours * 60) + mins)
-                dialog.dismiss()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun applySleepTimerSelection(minutes: Int) {
-        sleepTimerRemainingSeconds = minutes.toLong() * 60L
-        if (sleepTimerRemainingSeconds < 0L) sleepTimerRemainingSeconds = 0L
-
-        if (sleepTimerRemainingSeconds > 0L) {
-            val hrs = sleepTimerRemainingSeconds / 3600
-            val mins = (sleepTimerRemainingSeconds % 3600) / 60
-            val secs = sleepTimerRemainingSeconds % 60
-
-            sleepTimerLabel.text =
-                String.format("%02d:%02d:%02d", hrs, mins, secs)
-
-            if (isPlaying) startSleepTimerCountdown()
-
-        } else {
-            resetSleepTimer()
-        }
-    }
-
-    private fun startSleepTimerCountdown() {
-        cancelSleepTimerCountdown()
-        if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
-
-        val runnable = object : Runnable {
-            override fun run() {
-                if (!isPlaying || sleepTimerRemainingSeconds <= 0L) return
-
-                sleepTimerRemainingSeconds--
-
-                if (sleepTimerRemainingSeconds <= 0L) {
-                    pausePlayback()
-                    resetSleepTimer()
-                    return
-                }
-
-                val hrs = sleepTimerRemainingSeconds / 3600
-                val mins = (sleepTimerRemainingSeconds % 3600) / 60
-                val secs = sleepTimerRemainingSeconds % 60
-
-                sleepTimerLabel.text =
-                    String.format("%02d:%02d:%02d", hrs, mins, secs)
-
-                sleepTimerHandler.postDelayed(this, 1000L)
-            }
-        }
-
-        sleepTimerCountdownRunnable = runnable
-        sleepTimerHandler.post(runnable)
-    }
-
-    private fun cancelSleepTimerCountdown() {
-        sleepTimerCountdownRunnable?.let {
-            sleepTimerHandler.removeCallbacks(it)
-            sleepTimerCountdownRunnable = null
-        }
-    }
-
-    private fun resetSleepTimer() {
-        sleepTimerRemainingSeconds = 0L
-        cancelSleepTimerCountdown()
-        sleepTimerLabel.text = getString(R.string.sleep_timer_button_label)
-    }
-
     private fun registerPlaybackStateReceiver() {
-        if (playbackStateReceiverRegistered) return
+        if (avoidDoubleRegister()) return
         registerReceiver(
             playbackStateReceiver,
             IntentFilter(SoundPlaybackService.ACTION_PLAYBACK_STATE)
         )
         playbackStateReceiverRegistered = true
+    }
+
+    private fun avoidDoubleRegister(): Boolean {
+        return playbackStateReceiverRegistered
     }
 
     private fun unregisterPlaybackStateReceiver() {
@@ -450,11 +265,5 @@ class SoundDetailActivity : AppCompatActivity() {
 
         const val SOURCE_MAIN = "source_main"
         const val SOURCE_NOTIFICATION = "source_notification"
-
-        const val SOUND_OCEAN = "ocean"
-        const val SOUND_RAIN = "rain"
-        const val SOUND_BROWN = "brown"
-        const val SOUND_WATERFALL = "waterfall"
-
     }
 }
