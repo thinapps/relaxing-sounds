@@ -28,10 +28,12 @@ class MainActivity : AppCompatActivity() {
 
         val cardOcean = findViewById<MaterialCardView>(R.id.card_ocean_waves)
         val cardRain = findViewById<MaterialCardView>(R.id.card_rain)
+        val cardWaterfall = findViewById<MaterialCardView>(R.id.card_waterfall)
         val cardBrown = findViewById<MaterialCardView>(R.id.card_brown_noise)
 
         cardOcean.setRelaxingClick(SoundDetailActivity.SOUND_OCEAN)
         cardRain.setRelaxingClick(SoundDetailActivity.SOUND_RAIN)
+        cardWaterfall.setRelaxingClick(SoundDetailActivity.SOUND_WATERFALL)
         cardBrown.setRelaxingClick(SoundDetailActivity.SOUND_BROWN)
     }
 
