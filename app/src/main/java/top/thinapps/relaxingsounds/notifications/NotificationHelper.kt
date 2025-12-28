@@ -13,6 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.playback.SoundPlaybackService
 import top.thinapps.relaxingsounds.ui.SoundDetailActivity
+import top.thinapps.relaxingsounds.core.SoundCatalog
 
 object NotificationHelper {
 
@@ -108,11 +109,11 @@ object NotificationHelper {
     }
 
     private fun getSoundTitle(context: Context, soundKey: String?): String {
-        return when (soundKey) {
-            SoundPlaybackService.SOUND_OCEAN -> context.getString(R.string.sound_ocean_title)
-            SoundPlaybackService.SOUND_RAIN -> context.getString(R.string.sound_rain_title)
-            SoundPlaybackService.SOUND_BROWN -> context.getString(R.string.sound_brown_title)
-            else -> context.getString(R.string.app_name)
+        val sound = soundKey?.let { SoundCatalog.getByKey(it) }
+        return if (sound != null) {
+            context.getString(sound.titleResId)
+        } else {
+            context.getString(R.string.app_name)
         }
     }
 
