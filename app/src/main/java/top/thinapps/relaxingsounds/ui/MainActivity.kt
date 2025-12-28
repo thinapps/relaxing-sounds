@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import top.thinapps.relaxingsounds.R
 import top.thinapps.relaxingsounds.core.ClickDebounce
+import top.thinapps.relaxingsounds.core.SoundCatalog
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,15 +27,11 @@ class MainActivity : AppCompatActivity() {
 
         ensureNotificationPermission()
 
-        val cardOcean = findViewById<MaterialCardView>(R.id.card_ocean_waves)
-        val cardRain = findViewById<MaterialCardView>(R.id.card_rain)
-        val cardWaterfall = findViewById<MaterialCardView>(R.id.card_waterfall)
-        val cardBrown = findViewById<MaterialCardView>(R.id.card_brown_noise)
-
-        cardOcean.setRelaxingClick(SoundDetailActivity.SOUND_OCEAN)
-        cardRain.setRelaxingClick(SoundDetailActivity.SOUND_RAIN)
-        cardWaterfall.setRelaxingClick(SoundDetailActivity.SOUND_WATERFALL)
-        cardBrown.setRelaxingClick(SoundDetailActivity.SOUND_BROWN)
+        SoundCatalog.sounds.forEach { sound ->
+            val cardId = sound.homeCardId ?: return@forEach
+            findViewById<MaterialCardView>(cardId)
+                .setRelaxingClick(sound.key)
+        }
     }
 
     override fun onResume() {
