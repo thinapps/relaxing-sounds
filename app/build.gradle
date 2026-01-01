@@ -11,8 +11,8 @@ android {
         applicationId "top.thinapps.relaxingsounds"
         minSdk 24
         targetSdk 35
-        versionCode 64
-        versionName "0.7.1"
+        versionCode 65
+        versionName "0.8.0"
 
         // forces the use of the support library for vector drawables
         vectorDrawables.useSupportLibrary = true
@@ -73,8 +73,13 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "com.google.android.material:material:1.13.0"
 
-    // media & notification support (required for 0.4.0 playback service)
+    // media & notification support (required for media session compat)
     implementation "androidx.media:media:1.7.0"
+
+    // media3 exoplayer (required for seamless looping playback)
+    def media3_version = "1.9.0"
+    implementation "androidx.media3:media3-exoplayer:${media3_version}"
+    implementation "androidx.media3:media3-datasource:${media3_version}"
 
     // ui components
     implementation "androidx.constraintlayout:constraintlayout:2.2.0"
