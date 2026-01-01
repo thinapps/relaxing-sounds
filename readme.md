@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 0.8.0
+- migrated audio playback to Media3 ExoPlayer for smoother, more seamless looping
+- improved stability for long-running background playback via the playback service
+- minor internal cleanup related to audio playback and notifications
+
 ### 0.7.1
 - replaced `waterfall.mp3` with a commercially licensed audio file
 
