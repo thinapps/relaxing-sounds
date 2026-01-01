@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.7.1
+- replaced `waterfall.mp3` with a commercially licensed audio file
+
 ### 0.7.0
 - refactored sound configuration to a single SoundCatalog source of truth
 - removed hardcoded sound keys and mappings across UI, playback, and notifications
