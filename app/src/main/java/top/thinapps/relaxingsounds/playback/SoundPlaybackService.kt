@@ -5,20 +5,24 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Service
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.IBinder
-import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.app.NotificationManagerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import top.thinapps.relaxingsounds.R
-import top.thinapps.relaxingsounds.notifications.NotificationHelper
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.app.NotificationManagerCompat
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.datasource.RawResourceDataSource
+import androidx.media3.exoplayer.ExoPlayer
 import top.thinapps.relaxingsounds.core.ClickDebounce
 import top.thinapps.relaxingsounds.core.SoundCatalog
+import top.thinapps.relaxingsounds.notifications.NotificationHelper
 
 class SoundPlaybackService : Service() {
 
-    private var mediaPlayer: MediaPlayer? = null
+    private var player: ExoPlayer? = null
     private var fadeAnimator: ValueAnimator? = null
     private var isPlaying: Boolean = false
     private var currentSoundKey: String? = null
@@ -33,15 +37,15 @@ class SoundPlaybackService : Service() {
         mediaSession = MediaSessionCompat(this, "RelaxingSounds").apply {
             setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
             )
             isActive = true
         }
 
         playbackState = PlaybackStateCompat.Builder().setActions(
             PlaybackStateCompat.ACTION_PLAY or
-                    PlaybackStateCompat.ACTION_PAUSE or
-                    PlaybackStateCompat.ACTION_STOP
+                PlaybackStateCompat.ACTION_PAUSE or
+                PlaybackStateCompat.ACTION_STOP
         )
 
         mediaSession.setPlaybackState(
@@ -136,8 +140,8 @@ class SoundPlaybackService : Service() {
         fadeAnimator?.cancel()
         fadeAnimator = null
 
-        mediaPlayer?.release()
-        mediaPlayer = null
+        player?.release()
+        player = null
 
         isPlaying = false
         currentSoundKey = null
@@ -149,34 +153,41 @@ class SoundPlaybackService : Service() {
     }
 
     private fun preparePlayerIfNeeded(soundKey: String) {
-        if (mediaPlayer != null && soundKey == currentSoundKey) {
+        if (player != null && soundKey == currentSoundKey) {
             return
         }
 
         fadeAnimator?.cancel()
         fadeAnimator = null
 
-        mediaPlayer?.let { player ->
-            try { if (player.isPlaying) player.stop() } catch (_: IllegalStateException) {}
-            player.release()
-        }
-
-        mediaPlayer = null
+        player?.release()
+        player = null
 
         val sound = SoundCatalog.getByKey(soundKey) ?: return
         val resId = sound.rawResId
 
-        val player = MediaPlayer.create(this, resId)?.apply {
-            isLooping = true
-            setVolume(0f, 0f)
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+            .build()
+
+        val uri = RawResourceDataSource.buildRawResourceUri(resId)
+        val mediaItem = MediaItem.fromUri(uri)
+
+        val exo = ExoPlayer.Builder(this).build().apply {
+            setAudioAttributes(audioAttributes, true)
+            repeatMode = Player.REPEAT_MODE_ONE
+            volume = 0f
+            setMediaItem(mediaItem)
+            prepare()
         }
 
-        mediaPlayer = player
+        player = exo
         currentSoundKey = soundKey
     }
 
     private fun startFadeIn() {
-        val player = mediaPlayer ?: return
+        val exo = player ?: return
 
         fadeAnimator?.cancel()
         isPlaying = true
@@ -191,13 +202,15 @@ class SoundPlaybackService : Service() {
 
             addUpdateListener { animator ->
                 val v = animator.animatedValue as Float
-                player.setVolume(v, v)
+                exo.volume = v
             }
 
             addListener(object : AnimatorListenerAdapter() {
 
                 override fun onAnimationStart(animation: Animator) {
-                    if (!player.isPlaying) player.start()
+                    if (!exo.isPlaying) {
+                        exo.play()
+                    }
 
                     startForeground(
                         NotificationHelper.NOTIFICATION_ID,
@@ -222,7 +235,7 @@ class SoundPlaybackService : Service() {
     }
 
     private fun pauseWithFade() {
-        val player = mediaPlayer ?: return
+        val exo = player ?: return
 
         fadeAnimator?.cancel()
         isPlaying = false
@@ -239,12 +252,12 @@ class SoundPlaybackService : Service() {
 
             addUpdateListener { animator ->
                 val v = animator.animatedValue as Float
-                player.setVolume(v, v)
+                exo.volume = v
             }
 
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    try { player.pause() } catch (_: IllegalStateException) {}
+                    exo.pause()
 
                     stopForeground(false)
                     updateNotification(false)
@@ -266,12 +279,8 @@ class SoundPlaybackService : Service() {
 
         val previousKey = currentSoundKey
 
-        mediaPlayer?.let { player ->
-            try { if (player.isPlaying) player.stop() } catch (_: IllegalStateException) {}
-            player.release()
-        }
-
-        mediaPlayer = null
+        player?.release()
+        player = null
         currentSoundKey = null
 
         stopForeground(true)
