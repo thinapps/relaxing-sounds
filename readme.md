@@ -2,6 +2,9 @@
 
 ## Changelog
 
+### 0.8.1
+- added `stream.mp3` sound and related UI/playback support
+
 ### 0.8.0
 - migrated audio playback to Media3 ExoPlayer for smoother, more seamless looping
 - improved stability for long-running background playback via the playback service
