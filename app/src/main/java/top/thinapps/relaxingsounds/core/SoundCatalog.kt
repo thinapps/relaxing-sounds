@@ -42,6 +42,14 @@ object SoundCatalog {
             homeCardId = R.id.card_waterfall
         ),
         SoundItem(
+            key = "stream",
+            rawResId = R.raw.stream,
+            titleResId = R.string.sound_stream_title,
+            subtitleResId = R.string.sound_stream_subtitle,
+            backgroundResId = R.drawable.bg_sound_stream,
+            homeCardId = R.id.card_stream
+        ),
+        SoundItem(
             key = "brown",
             rawResId = R.raw.brown_noise,
             titleResId = R.string.sound_brown_title,
