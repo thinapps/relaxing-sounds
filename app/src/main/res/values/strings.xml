@@ -14,13 +14,17 @@
     <string name="sound_rain_title">Rain</string>
     <string name="sound_rain_subtitle">Steady rain on a quiet night</string>
 
-    <!-- brown noise -->
-    <string name="sound_brown_title">Brown Noise</string>
-    <string name="sound_brown_subtitle">Deep, warm background noise</string>
-
     <!-- waterfall -->
     <string name="sound_waterfall_title">Waterfall</string>
     <string name="sound_waterfall_subtitle">Deep continuous cascade</string>
+
+    <!-- stream -->
+    <string name="sound_stream_title">Stream</string>
+    <string name="sound_stream_subtitle">Flowing water in a gentle creek</string>
+
+    <!-- brown noise -->
+    <string name="sound_brown_title">Brown Noise</string>
+    <string name="sound_brown_subtitle">Deep, warm background noise</string>
 
     <!-- playback controls -->
     <string name="sound_play_label">Play</string>
